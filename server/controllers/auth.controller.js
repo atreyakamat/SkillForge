@@ -4,6 +4,8 @@ import crypto from 'crypto'
 import User from '../models/User.js'
 import { RefreshToken, BlacklistedToken } from '../models/Token.js'
 import { registerSchema, loginSchema, forgotSchema, resetSchema, validate } from '../utils/validators.js'
+import ActionToken from '../models/ActionToken.js'
+import { sendEmail } from '../utils/email.js'
 
 function signAccessToken(user) {
   const payload = { id: user._id, email: user.email, roles: [user.role] }
@@ -25,12 +27,23 @@ export async function register(req, res) {
   const existing = await User.findOne({ email })
   if (existing) return res.status(400).json({ message: 'Email already in use' })
   const passwordHash = await bcrypt.hash(password, 10)
-  const user = await User.create({ name, email, passwordHash })
-  // TODO: send welcome and verification email
+  const user = await User.create({ name, email, passwordHash, role: req.body.role, industry: req.body.industry })
+  // Send welcome and verification email
+  const raw = crypto.randomBytes(32).toString('hex')
+  const tokenHash = crypto.createHash('sha256').update(raw).digest('hex')
+  const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000)
+  await ActionToken.create({ user: user._id, purpose: 'email_verify', tokenHash, expiresAt })
+  const verifyUrl = `${process.env.APP_BASE_URL || 'http://localhost:5173'}/verify?token=${raw}`
+  void sendEmail(user.email, 'Welcome to SkillForge - Verify your email', `Verify your email: ${verifyUrl}`)
   const accessToken = signAccessToken(user)
   const { token: refreshToken, expiresAt } = signRefreshToken(user)
   await createRefreshRecord(user._id, refreshToken, expiresAt)
-  res.status(201).json({ accessToken, refreshToken })
+  res.status(201).json({
+    success: true,
+    message: 'User registered successfully',
+    user: { id: user._id, name: user.name, email: user.email, role: user.role, verified: user.isEmailVerified },
+    tokens: { access: accessToken, refresh: refreshToken }
+  })
 }
 
 export async function login(req, res) {
@@ -60,7 +73,12 @@ export async function login(req, res) {
   const accessToken = signAccessToken(user)
   const { token: refreshToken, expiresAt } = signRefreshToken(user)
   await createRefreshRecord(user._id, refreshToken, expiresAt)
-  res.json({ accessToken, refreshToken })
+  res.json({
+    success: true,
+    message: 'Login successful',
+    user: { id: user._id, name: user.name, email: user.email, role: user.role, skills: user.skills || [], careerGoals: [] },
+    tokens: { access: accessToken, refresh: refreshToken }
+  })
 }
 
 export async function logout(req, res) {
@@ -75,7 +93,7 @@ export async function logout(req, res) {
     const expMs = (decoded?.exp ? decoded.exp * 1000 : Date.now())
     await BlacklistedToken.create({ token: access, expiresAt: new Date(expMs) })
   }
-  res.json({ message: 'Logged out' })
+  res.json({ success: true, message: 'Logged out successfully' })
 }
 
 export async function refreshToken(req, res) {
@@ -86,7 +104,8 @@ export async function refreshToken(req, res) {
   const user = await User.findById(record.user)
   if (!user) return res.status(401).json({ message: 'Invalid refresh token' })
   const accessToken = signAccessToken(user)
-  res.json({ accessToken })
+  const newRefresh = refreshToken // could rotate in future
+  res.json({ success: true, message: 'Token refreshed successfully', tokens: { access: accessToken, refresh: newRefresh } })
 }
 
 export async function forgotPassword(req, res) {
@@ -94,23 +113,41 @@ export async function forgotPassword(req, res) {
   const user = await User.findOne({ email })
   // Always respond success to avoid user enumeration
   if (user) {
-    // TODO: store reset token (hashed) and send email
+    const raw = crypto.randomBytes(32).toString('hex')
+    const tokenHash = crypto.createHash('sha256').update(raw).digest('hex')
+    const expiresAt = new Date(Date.now() + 60 * 60 * 1000)
+    await ActionToken.create({ user: user._id, purpose: 'password_reset', tokenHash, expiresAt })
+    const resetUrl = `${process.env.APP_BASE_URL || 'http://localhost:5173'}/reset-password?token=${raw}`
+    void sendEmail(user.email, 'Reset your SkillForge password', `Reset here: ${resetUrl}`)
   }
-  res.json({ message: 'If the email exists, a reset link has been sent.' })
+  res.json({ success: true, message: 'Password reset email sent successfully' })
 }
 
 export async function resetPassword(req, res) {
   const { token, password } = validate(resetSchema, req.body)
-  void token
-  // TODO: verify token against stored hashed token
-  // For scaffold, no-op
-  res.json({ message: 'Password updated (placeholder)' })
+  const tokenHash = crypto.createHash('sha256').update(token).digest('hex')
+  const record = await ActionToken.findOne({ purpose: 'password_reset', tokenHash, consumedAt: { $exists: false }, expiresAt: { $gt: new Date() } })
+  if (!record) return res.status(400).json({ message: 'Invalid or expired token' })
+  const user = await User.findById(record.user)
+  if (!user) return res.status(400).json({ message: 'Invalid token' })
+  user.passwordHash = await bcrypt.hash(password, 10)
+  await user.save()
+  record.consumedAt = new Date()
+  await record.save()
+  res.json({ success: true, message: 'Password reset successfully' })
 }
 
 export async function verifyEmail(req, res) {
   const { token } = req.params
-  void token
-  // TODO: verify email token and set isEmailVerified
-  res.json({ message: 'Email verified (placeholder)' })
+  const tokenHash = crypto.createHash('sha256').update(token).digest('hex')
+  const record = await ActionToken.findOne({ purpose: 'email_verify', tokenHash, consumedAt: { $exists: false }, expiresAt: { $gt: new Date() } })
+  if (!record) return res.status(400).json({ success: false, message: 'Invalid or expired verification token' })
+  const user = await User.findById(record.user)
+  if (!user) return res.status(400).json({ message: 'Invalid token' })
+  user.isEmailVerified = true
+  await user.save()
+  record.consumedAt = new Date()
+  await record.save()
+  res.json({ success: true, message: 'Email verified successfully', user: { id: user._id, email: user.email, verified: true } })
 }
 

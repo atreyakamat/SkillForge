@@ -3,13 +3,8 @@ import cors from 'cors'
 import helmet from 'helmet'
 import morgan from 'morgan'
 import dotenv from 'dotenv'
-<<<<<<< HEAD
-import helmet from 'helmet'
-import { connectDb } from './config/db.js'
-=======
 import rateLimit from 'express-rate-limit'
-import { connectDb, getDbHealth } from './config/database.js'
->>>>>>> c593d28860cafaaa1fa204e9e0aa564e2e246775
+import { connectDb } from './config/db.js'
 import authRoutes from './routes/auth.routes.js'
 import userRoutes from './routes/user.routes.js'
 import assessmentRoutes from './routes/assessment.routes.js'
@@ -36,11 +31,6 @@ app.use('/api', limiter)
 
 // Health
 app.get('/api/health', (req, res) => res.json({ status: 'ok', env: process.env.NODE_ENV || 'development' }))
-app.get('/api/health/db', async (req, res) => {
-  const health = getDbHealth()
-  const status = health.ok ? 200 : 500
-  res.status(status).json(health)
-})
 // Root
 app.get('/', (req, res) => res.json({ status: 'ok', service: 'SkillForge API' }))
 

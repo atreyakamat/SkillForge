@@ -13,7 +13,7 @@ export function AuthProvider({ children }) {
       setStoredToken(token)
       api.setToken(token)
       // TODO: fetch current user profile
-      setUser({ email: 'user@example.com' })
+      setUser((prev)=> prev || { email: 'you@skillforge.dev' })
     } else {
       removeStoredToken()
       api.setToken(null)
@@ -26,18 +26,17 @@ export function AuthProvider({ children }) {
     token,
     user,
     login: async (email, password) => {
-      // TODO: integrate with backend /auth/login
-      void email; void password
-      const fakeToken = 'dev-token'
-      setToken(fakeToken)
+      const { data } = await api.post('/auth/login', { email, password })
+      setToken(data.accessToken)
     },
     register: async (email, password) => {
-      // TODO: integrate with backend /auth/register
-      void email; void password
-      const fakeToken = 'dev-token'
-      setToken(fakeToken)
+      const { data } = await api.post('/auth/register', { name: email.split('@')[0], email, password })
+      setToken(data.accessToken)
     },
-    logout: () => setToken(null)
+    logout: async () => {
+      try { await api.post('/auth/logout', {}) } catch {}
+      setToken(null)
+    }
   }), [token, user])
 
   return (

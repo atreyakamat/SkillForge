@@ -8,7 +8,10 @@ export const registerSchema = Joi.object({
     .pattern(/[a-z]/)
     .pattern(/[A-Z]/)
     .pattern(/[0-9]/)
-    .required()
+    .required(),
+  role: Joi.string().optional(),
+  industry: Joi.string().optional(),
+  experience: Joi.number().integer().min(0).optional()
 })
 
 export const loginSchema = Joi.object({
@@ -35,7 +38,7 @@ export function validate(schema, data) {
   if (error) {
     const message = error.details?.[0]?.message || 'Validation error'
     const err = new Error(message)
-    err.status = 400
+    err.status = 422
     throw err
   }
   return value
