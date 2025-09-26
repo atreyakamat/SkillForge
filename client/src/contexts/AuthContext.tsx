@@ -40,8 +40,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
     setLoading(true)
     setError('')
-    api.get('/auth/me')
-      .then((res) => setUser(res.data))
+    api.instance.get('/auth/me')
+      .then((res) => setUser((res.data && res.data.data) ? res.data.data : res.data))
       .catch(() => setUser(null))
       .finally(() => setLoading(false))
   }, [token])
@@ -60,9 +60,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setError('')
     rememberRef.current = remember
     try {
-      const { data } = await api.post('/auth/login', { email, password })
-      const receivedToken: string = data?.token
-      const receivedUser: User | null = data?.user || null
+      const { data } = await api.instance.post('/auth/login', { email, password })
+      const receivedToken: string = data?.token || data?.data?.token
+      const receivedUser: User | null = data?.user || data?.data?.user || null
       setToken(receivedToken)
       setUser(receivedUser)
     } catch (err: any) {
@@ -77,9 +77,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setLoading(true)
     setError('')
     try {
-      const { data } = await api.post('/auth/register', { name, email, password, role })
-      const receivedToken: string = data?.token
-      const receivedUser: User | null = data?.user || null
+      const { data } = await api.instance.post('/auth/register', { name, email, password, role })
+      const receivedToken: string = data?.token || data?.data?.token
+      const receivedUser: User | null = data?.user || data?.data?.user || null
       setToken(receivedToken)
       setUser(receivedUser)
     } catch (err: any) {
@@ -93,8 +93,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   async function refreshToken() {
     if (!token) return
     try {
-      const { data } = await api.post('/auth/refresh')
-      const newToken: string = data?.token
+      const { data } = await api.instance.post('/auth/refresh')
+      const newToken: string = data?.token || data?.data?.token
       setToken(newToken)
     } catch (err) {
       // Refresh failed; logout

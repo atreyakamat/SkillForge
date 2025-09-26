@@ -1,4 +1,5 @@
 import { createContext, useContext, useMemo, useRef, useState } from 'react'
+import { peerAPI } from '../services/api.js'
 
 const PeerReviewContext = createContext(null)
 
@@ -19,22 +20,45 @@ export function PeerReviewProvider({ children }) {
     setNotifications((n) => n.map(x => x.id === id ? { ...x, read: true } : x))
   }
 
-  function sendRequest({ to, skills, message, deadline }) {
-    const req = { id: crypto.randomUUID(), to, skills, message, deadline, status: 'sent', ts: Date.now() }
-    setRequests((r) => [req, ...r])
-    addNotification(`Review request sent to ${to?.name || to?.email || 'user'}`)
-    return req
+  async function sendRequest({ to, skills, message, deadline }) {
+    const optimistic = { id: crypto.randomUUID(), to, skills, message, deadline, status: 'sending', ts: Date.now() }
+    setRequests((r) => [optimistic, ...r])
+    try {
+      const res = await peerAPI.requestReview({ to, skills, message, deadline })
+      const saved = res.data?.request || res.data
+      setRequests((r) => [saved, ...r.filter(x => x.id !== optimistic.id)])
+      addNotification(`Review request sent to ${to?.name || to?.email || 'user'}`)
+      return saved
+    } catch (err) {
+      setRequests((r) => r.filter(x => x.id !== optimistic.id))
+      throw err
+    }
   }
 
   function updateRequestStatus(id, status) {
     setRequests((r) => r.map(x => x.id === id ? { ...x, status } : x))
   }
 
-  function submitReview({ forUser, skills, anonymous, comments, confidence }) {
-    const rv = { id: crypto.randomUUID(), forUser, skills, anonymous, comments, confidence, ts: Date.now() }
-    setReviews((rs) => [rv, ...rs])
-    addNotification('Peer review submitted')
-    return rv
+  async function submitReview({ forUser, skills, anonymous, comments, confidence }) {
+    const optimistic = { id: crypto.randomUUID(), forUser, skills, anonymous, comments, confidence, ts: Date.now(), status: 'submitting' }
+    setReviews((rs) => [optimistic, ...rs])
+    try {
+      const res = await peerAPI.submitReview({ forUser, skills, anonymous, comments, confidence })
+      const saved = res.data?.review || res.data
+      setReviews((rs) => [saved, ...rs.filter(x => x.id !== optimistic.id)])
+      addNotification('Peer review submitted')
+      return saved
+    } catch (err) {
+      setReviews((rs) => rs.filter(x => x.id !== optimistic.id))
+      throw err
+    }
+  }
+
+  async function loadReviews(params) {
+    const res = await peerAPI.getReviews(params)
+    const items = res.data?.reviews || res.data || []
+    setReviews(items)
+    return items
   }
 
   const value = useMemo(() => ({
@@ -46,6 +70,7 @@ export function PeerReviewProvider({ children }) {
     sendRequest,
     updateRequestStatus,
     submitReview,
+    loadReviews,
   }), [reviews, requests, notifications])
 
   return <PeerReviewContext.Provider value={value}>{children}</PeerReviewContext.Provider>
