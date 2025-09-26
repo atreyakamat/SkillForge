@@ -1,3 +1,14 @@
+export default function LoadingSpinner({ size = 16, className = '' }) {
+  const dimension = typeof size === 'number' ? `${size}px` : size
+  return (
+    <span
+      aria-label="Loading"
+      className={`inline-block border-2 border-current border-t-transparent rounded-full animate-spin ${className}`}
+      style={{ width: dimension, height: dimension }}
+    />
+  )
+}
+
 export default function LoadingSpinner({ variant = 'spinner', size = 'md', color = 'primary' }) {
   const sizes = { sm: 'h-4 w-4', md: 'h-6 w-6', lg: 'h-10 w-10' }
   const colors = {
