@@ -1,12 +1,14 @@
 import express from 'express'
 import cors from 'cors'
+import helmet from 'helmet'
 import morgan from 'morgan'
 import dotenv from 'dotenv'
-import { connectDb } from './config/db.js'
+import rateLimit from 'express-rate-limit'
+import { connectDb, getDbHealth } from './config/database.js'
 import authRoutes from './routes/auth.routes.js'
 import userRoutes from './routes/user.routes.js'
 import assessmentRoutes from './routes/assessment.routes.js'
-import { notFound, errorHandler } from './middleware/error.js'
+import { notFound, errorHandler } from './middleware/errorHandler.js'
 
 dotenv.config()
 
@@ -14,11 +16,28 @@ const app = express()
 
 // Middleware
 app.use(cors({ origin: process.env.CORS_ORIGIN || 'http://localhost:5173' }))
+app.use(helmet())
 app.use(express.json())
 app.use(morgan('dev'))
 
+// Rate Limiting
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 100,
+  standardHeaders: true,
+  legacyHeaders: false
+})
+app.use('/api', limiter)
+
 // Health
-app.get('/api/health', (req, res) => res.json({ status: 'ok' }))
+app.get('/api/health', (req, res) => res.json({ status: 'ok', env: process.env.NODE_ENV || 'development' }))
+app.get('/api/health/db', async (req, res) => {
+  const health = getDbHealth()
+  const status = health.ok ? 200 : 500
+  res.status(status).json(health)
+})
+// Root
+app.get('/', (req, res) => res.json({ status: 'ok', service: 'SkillForge API' }))
 
 // Routes
 app.use('/api/auth', authRoutes)
