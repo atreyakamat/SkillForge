@@ -75,6 +75,17 @@ export default function Landing() {
         </div>
       </section>
 
+      {/* Demo Video */}
+      <section className="py-12">
+        <div className="max-w-4xl mx-auto px-6 text-center">
+          <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">Watch a 2‑minute Demo</h2>
+          <p className="text-gray-600 mb-6">Get a quick overview of how SkillForge helps you identify and close skill gaps.</p>
+          <div className="rounded-xl overflow-hidden border border-gray-200 shadow-sm bg-black">
+            <video src="/demo.mp4" controls className="w-full h-auto" preload="metadata"></video>
+          </div>
+        </div>
+      </section>
+
       {/* Social proof */}
       <section id="social-proof" className="py-16 md:py-20">
         <div className="max-w-6xl mx-auto px-6">
