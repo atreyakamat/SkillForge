@@ -1,5 +1,7 @@
-export function formatApiResponse(success, message, data = {}) {
-  return { success, message, ...data }
+export function formatApiResponse(success, message, data = null, meta = undefined) {
+  const res = { success, data, message }
+  if (meta !== undefined) res.meta = meta
+  return res
 }
 
 export function calculateAverageRating(selfRating = 0, peerRatings = []) {

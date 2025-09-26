@@ -23,6 +23,8 @@ const peerReviewSchema = new mongoose.Schema({
 }, { timestamps: true })
 
 peerReviewSchema.index({ reviewer: 1, reviewee: 1, status: 1 })
+peerReviewSchema.index({ reviewee: 1, createdAt: -1 })
+peerReviewSchema.index({ reviewer: 1, createdAt: -1 })
 
 export default mongoose.model('PeerReview', peerReviewSchema)
 

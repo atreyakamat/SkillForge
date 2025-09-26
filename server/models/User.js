@@ -22,7 +22,7 @@ const preferencesSchema = new mongoose.Schema({
 
 const userSchema = new mongoose.Schema({
   name: { type: String },
-  email: { type: String, required: true, unique: true, index: true },
+  email: { type: String, required: true, unique: true, index: true, lowercase: true, trim: true, match: /.+@.+\..+/ },
   passwordHash: { type: String, required: true },
   role: { type: String, enum: ['user', 'admin'], default: 'user' },
   profilePicture: { type: String },
@@ -36,6 +36,9 @@ const userSchema = new mongoose.Schema({
   isEmailVerified: { type: Boolean, default: false },
   deletedAt: { type: Date, default: null }
 }, { timestamps: true })
+
+userSchema.index({ email: 1 }, { unique: true })
+userSchema.index({ 'skills.name': 1 })
 
 userSchema.methods.comparePassword = function comparePassword(password) {
   return bcrypt.compare(password, this.passwordHash)
