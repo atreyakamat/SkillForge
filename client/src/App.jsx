@@ -6,6 +6,7 @@ import ResetPassword from './pages/ResetPassword.jsx'
 import Login from './pages/Login.jsx'
 import Register from './pages/Register.jsx'
 import Assessment from './pages/Assessment.jsx'
+import PeerReviewRequest from './pages/PeerReviewRequest.jsx'
 import NavBar from './components/common/NavBar.jsx'
 import ProtectedRoute from './components/auth/ProtectedRoute'
 
@@ -22,6 +23,8 @@ export default function App() {
           <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
           <Route path="/assessment" element={<ProtectedRoute><Assessment /></ProtectedRoute>} />
+          <Route path="/peer/request" element={<PeerReviewRequest />} />
+          <Route path="/peerreviewrequest" element={<PeerReviewRequest />} />
         </Routes>
       </main>
     </div>
