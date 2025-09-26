@@ -24,3 +24,4 @@ export async function sendSkillMilestone(to, skill) {
   console.log(`[EMAIL] Skill Milestone -> ${to} | ${skill}`)
 }
 
+

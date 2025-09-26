@@ -1,13 +1,16 @@
-import { Bell, LogOut, User } from 'lucide-react'
+import { Bell, LogOut, User, Menu } from 'lucide-react'
 import { useAuthContext } from '../../contexts/AuthContext'
 
-export default function Header() {
+export default function Header({ onMenuToggle }) {
   const { user, logout } = useAuthContext()
 
   return (
-    <header className="h-14 border-b bg-white sticky top-0 z-10">
-      <div className="h-full max-w-6xl mx-auto px-4 flex items-center justify-between">
+    <header className="h-16 border-b bg-white sticky top-0 z-10">
+      <div className="h-full max-w-[1280px] mx-auto px-8 flex items-center justify-between">
         <div className="flex items-center gap-3">
+          <button className="md:hidden p-2 rounded hover:bg-gray-100" aria-label="Open menu" onClick={onMenuToggle}>
+            <Menu className="h-5 w-5" />
+          </button>
           <div className="font-semibold">Dashboard</div>
           <nav className="hidden sm:flex text-sm text-gray-600 gap-2">
             <span>Home</span>

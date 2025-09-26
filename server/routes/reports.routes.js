@@ -12,3 +12,4 @@ router.get('/team/:managerId', requireAuth, createTeamReport)
 
 export default router
 
+

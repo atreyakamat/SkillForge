@@ -1,19 +1,19 @@
 export default function Button({ variant = 'primary', size = 'md', loading = false, disabled = false, leftIcon, rightIcon, className = '', children, ...props }) {
   const variants = {
-    primary: 'bg-primary-600 text-white hover:bg-primary-700',
-    secondary: 'bg-secondary-600 text-white hover:bg-secondary-700',
-    danger: 'bg-red-600 text-white hover:bg-red-700',
-    ghost: 'bg-transparent hover:bg-gray-100 text-gray-700'
+    primary: 'btn btn-primary',
+    secondary: 'btn btn-secondary',
+    danger: 'btn btn-danger',
+    ghost: 'inline-flex items-center justify-center rounded-md border border-transparent text-gray-700 bg-transparent hover:bg-gray-100 font-medium'
   }
   const sizes = {
     sm: 'h-8 px-3 text-sm',
-    md: 'h-10 px-4',
-    lg: 'h-12 px-5 text-lg'
+    md: 'h-10 px-6',
+    lg: 'h-12 px-6 text-lg'
   }
   return (
     <button
       disabled={disabled || loading}
-      className={`inline-flex items-center justify-center rounded-md border border-transparent disabled:opacity-50 disabled:cursor-not-allowed ${variants[variant]} ${sizes[size]} ${className}`}
+      className={`${variants[variant]} ${sizes[size]} ${className}`}
       {...props}
     >
       {leftIcon && <span className="mr-2 inline-flex">{leftIcon}</span>}

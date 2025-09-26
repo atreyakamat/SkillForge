@@ -43,11 +43,14 @@ export default {
           700: '#7e22ce',
           800: '#6b21a8',
           900: '#581c87'
-        }
+        },
+        success: '#10b981',
+        warning: '#f59e0b',
+        danger: '#ef4444'
       },
       fontFamily: {
         sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
-        data: ['Roboto', 'ui-sans-serif', 'system-ui', 'sans-serif']
+        data: ['JetBrains Mono', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'monospace']
       },
       screens: {
         xs: '480px',
@@ -58,11 +61,26 @@ export default {
         '2xl': '1536px'
       },
       spacing: {
+        1: '4px',
+        2: '8px',
+        4: '16px',
+        6: '24px',
+        8: '32px',
+        12: '48px',
+        16: '64px',
         13: '3.25rem',
         15: '3.75rem',
         18: '4.5rem',
         22: '5.5rem',
         26: '6.5rem'
+      },
+      borderRadius: {
+        md: '8px',
+        xl: '12px'
+      },
+      boxShadow: {
+        card: '0 1px 3px rgba(0,0,0,0.1)',
+        cardHover: '0 4px 12px rgba(0,0,0,0.12)'
       }
     }
   },

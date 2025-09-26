@@ -10,12 +10,18 @@ const nav = [
   { to: '/dashboard/settings', label: 'Settings', icon: Settings },
 ]
 
-export default function Sidebar() {
+export default function Sidebar({ mobile = false, onNavigate, className = '' }) {
+  const containerClass = mobile ? 'block w-full' : 'hidden md:block w-[280px]'
   return (
-    <aside className="bg-white border-r h-full p-3 hidden md:block w-60 sticky top-14">
+    <aside className={`bg-white border-r h-full p-3 sticky ${mobile ? 'top-0' : 'top-16'} ${containerClass} ${className}`}>
       <nav className="space-y-1">
         {nav.map(({ to, label, icon: Icon }) => (
-          <NavLink key={to} to={to} className={({ isActive }) => `flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-100 ${isActive ? 'bg-gray-100 font-medium' : ''}`}>
+          <NavLink
+            key={to}
+            to={to}
+            onClick={onNavigate}
+            className={({ isActive }) => `flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-100 ${isActive ? 'bg-gray-100 font-medium' : ''}`}
+          >
             <Icon className="h-4 w-4" />
             <span>{label}</span>
           </NavLink>
