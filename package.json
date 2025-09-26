@@ -1,0 +1,27 @@
+{
+  "name": "skillforge-monorepo",
+  "private": true,
+  "version": "0.1.0",
+  "description": "SkillForge - Personal Learning Skill Gap Analyzer (monorepo for client and server)",
+  "workspaces": [
+    "client",
+    "server"
+  ],
+  "scripts": {
+    "install:all": "npm install -w client -w server",
+    "dev": "concurrently -k -n server,client -c yellow,cyan \"npm -w server run dev\" \"npm -w client run dev\"",
+    "client": "npm -w client run dev",
+    "server": "npm -w server run dev",
+    "build": "npm -w client run build",
+    "preview": "npm -w client run preview"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
+
