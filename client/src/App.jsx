@@ -6,6 +6,10 @@ import ResetPassword from './pages/ResetPassword.jsx'
 import Login from './pages/Login.jsx'
 import Register from './pages/Register.jsx'
 import Assessment from './pages/Assessment.jsx'
+import PeerReviewRequest from './pages/PeerReviewRequest.jsx'
+import PeerReviewCompletion from './pages/PeerReviewCompletion.jsx'
+import PeerReviewHistory from './pages/PeerReviewHistory.jsx'
+import Profile from './pages/Profile.jsx'
 import NavBar from './components/common/NavBar.jsx'
 import ProtectedRoute from './components/auth/ProtectedRoute'
 import MySkills from './pages/MySkills.jsx'
@@ -25,7 +29,15 @@ export default function App() {
           <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
           <Route path="/skills" element={<ProtectedRoute><MySkills /></ProtectedRoute>} />
           <Route path="/assessment" element={<ProtectedRoute><Assessment /></ProtectedRoute>} />
+<<<<<<< HEAD
           <Route path="/gap-jobs" element={<ProtectedRoute><GapAndJobs /></ProtectedRoute>} />
+=======
+          <Route path="/peer/request" element={<PeerReviewRequest />} />
+          <Route path="/peerreviewrequest" element={<PeerReviewRequest />} />
+          <Route path="/peer/complete" element={<PeerReviewCompletion />} />
+          <Route path="/peer/history" element={<PeerReviewHistory />} />
+          <Route path="/profile" element={<Profile />} />
+>>>>>>> origin/peerbranch
         </Routes>
       </main>
     </div>
