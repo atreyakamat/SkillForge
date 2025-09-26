@@ -1,8 +1,10 @@
-import LoginForm from '../components/auth/LoginForm'
+import LoginForm from '../components/auth/LoginForm.tsx'
+import NavBar from '../components/common/NavBar.jsx'
 
 export default function Login() {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
+      <NavBar />
       <div className="flex min-h-screen">
         <div className="w-full lg:w-3/5 flex items-center justify-center p-6 sm:p-12">
           <div className="w-full max-w-md">

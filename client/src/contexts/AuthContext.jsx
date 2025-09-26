@@ -1,10 +1,3 @@
-<<<<<<< HEAD
-export { AuthProvider, useAuthContext } from './AuthContext.tsx'
-<<<<<<< HEAD
-
-=======
->>>>>>> origin/peerbranch
-=======
 import React, { createContext, useContext, useEffect, useMemo, useState } from 'react'
 import { getStoredToken, removeStoredToken, setStoredToken } from '../utils/storage.js'
 import api from '../services/api.js'
@@ -56,6 +49,3 @@ export function useAuthContext() {
   if (!ctx) throw new Error('useAuthContext must be used within AuthProvider')
   return ctx
 }
-
-
->>>>>>> origin/integrate

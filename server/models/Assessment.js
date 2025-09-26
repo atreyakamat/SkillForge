@@ -9,8 +9,8 @@ const peerReviewSchema = new mongoose.Schema({
 }, { _id: true })
 
 const assessmentSchema = new mongoose.Schema({
-  user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-  skill: { type: mongoose.Schema.Types.ObjectId, ref: 'Skill', required: true },
+  user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true, index: true },
+  skill: { type: mongoose.Schema.Types.ObjectId, ref: 'Skill', required: true, index: true },
   selfRating: { type: Number, min: 1, max: 10, required: true },
   confidence: { type: Number, min: 1, max: 10 },
   evidence: { type: String },
@@ -34,6 +34,9 @@ assessmentSchema.pre('save', function computeAverage(next) {
   }
   next()
 })
+
+// Compound index for user + skill
+assessmentSchema.index({ user: 1, skill: 1 }, { unique: false })
 
 export default mongoose.model('Assessment', assessmentSchema)
 

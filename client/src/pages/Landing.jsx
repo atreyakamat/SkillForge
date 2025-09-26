@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { PlayCircle, Users, Lightbulb, GraduationCap } from 'lucide-react'
 import Footer from '../components/ui/Footer.jsx'
+import NavBar from '../components/common/NavBar.jsx'
 
 export default function Landing() {
   const logos = [
@@ -8,6 +9,9 @@ export default function Landing() {
   ]
   return (
     <div className="bg-white text-gray-800">
+      {/* Navigation Header */}
+      <NavBar />
+      
       {/* Hero */}
       <section className="py-16 md:py-20 bg-gray-50">
         <div className="max-w-6xl mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">

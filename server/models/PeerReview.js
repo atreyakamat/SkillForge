@@ -8,9 +8,9 @@ const reviewItemSchema = new mongoose.Schema({
 }, { _id: false })
 
 const peerReviewSchema = new mongoose.Schema({
-  reviewer: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true, index: true },
-  reviewee: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true, index: true },
-  status: { type: String, enum: ['pending', 'completed', 'expired'], default: 'pending', index: true },
+  reviewer: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  reviewee: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  status: { type: String, enum: ['pending', 'completed', 'expired'], default: 'pending' },
   requestedSkills: { type: [String], default: [] },
   deadline: { type: Date },
   message: { type: String },
@@ -22,7 +22,11 @@ const peerReviewSchema = new mongoose.Schema({
   qualityFeedback: { type: String }
 }, { timestamps: true })
 
+// Compound indexes for efficient querying
 peerReviewSchema.index({ reviewer: 1, reviewee: 1, status: 1 })
+peerReviewSchema.index({ reviewer: 1 })
+peerReviewSchema.index({ reviewee: 1 })
+peerReviewSchema.index({ status: 1 })
 
 export default mongoose.model('PeerReview', peerReviewSchema)
 

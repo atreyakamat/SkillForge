@@ -6,7 +6,7 @@ import dotenv from 'dotenv'
 import rateLimit from 'express-rate-limit'
 import mongoose from 'mongoose'
 import jwt from 'jsonwebtoken'
-import { connectDb } from './config/db.js'
+import { connectDb, getDatabaseHealth } from './config/db.js'
 import { requireAuth } from './middleware/auth.js'
 import authRoutes from './routes/auth.routes.js'
 import userRoutes from './routes/user.routes.js'
@@ -16,6 +16,7 @@ import peerRoutes from './routes/peer.routes.js'
 import analyticsRoutes from './routes/analytics.routes.js'
 import reportsRoutes from './routes/reports.routes.js'
 import jobsRoutes from './routes/jobs.routes.js'
+import testRoutes from './routes/test.routes.js'
 import { notFound, errorHandler } from './middleware/errorHandler.js'
 
 dotenv.config()
@@ -57,9 +58,7 @@ app.get('/health', (req, res) => {
     success: true,
     service: 'skill-gap-analyzer-api',
     env: process.env.NODE_ENV || 'development',
-    db: {
-      state: mongoose.connection.readyState // 0=disconnected, 1=connected, 2=connecting, 3=disconnecting
-    }
+    db: getDatabaseHealth()
   })
 })
 
@@ -98,6 +97,11 @@ app.use('/api/peer', peerRoutes)
 app.use('/api/analytics', analyticsRoutes)
 app.use('/api/reports', reportsRoutes)
 app.use('/api/jobs', jobsRoutes)
+
+// Test routes (only available in test environment)
+if (process.env.NODE_ENV === 'test') {
+  app.use('/api/test', testRoutes)
+}
 
 // Errors
 app.use(notFound)

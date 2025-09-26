@@ -10,34 +10,86 @@ import PeerReviewRequest from './pages/PeerReviewRequest.jsx'
 import PeerReviewCompletion from './pages/PeerReviewCompletion.jsx'
 import PeerReviewHistory from './pages/PeerReviewHistory.jsx'
 import Profile from './pages/Profile.jsx'
-import NavBar from './components/common/NavBar.jsx'
+import Layout from './components/layout/Layout.jsx'
 import ProtectedRoute from './components/auth/ProtectedRoute'
 import MySkills from './pages/MySkills.jsx'
 import GapAndJobs from './pages/GapAndJobs.jsx'
 
 export default function App() {
   return (
-    <div className="min-h-screen bg-gray-50 text-gray-900">
-      <NavBar />
-      <main className="max-w-6xl mx-auto px-4 py-6">
-        <Routes>
-          <Route path="/" element={<Landing />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route path="/reset-password" element={<ResetPassword />} />
-          <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-          <Route path="/skills" element={<ProtectedRoute><MySkills /></ProtectedRoute>} />
-          <Route path="/assessment" element={<ProtectedRoute><Assessment /></ProtectedRoute>} />
-          <Route path="/gap-jobs" element={<ProtectedRoute><GapAndJobs /></ProtectedRoute>} />
-          <Route path="/peer/request" element={<PeerReviewRequest />} />
-          <Route path="/peerreviewrequest" element={<PeerReviewRequest />} />
-          <Route path="/peer/complete" element={<PeerReviewCompletion />} />
-          <Route path="/peer/history" element={<PeerReviewHistory />} />
-          <Route path="/profile" element={<Profile />} />
-        </Routes>
-      </main>
-    </div>
+    <Routes>
+      {/* Public routes without layout */}
+      <Route path="/" element={<Landing />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Register />} />
+      <Route path="/forgot-password" element={<ForgotPassword />} />
+      <Route path="/reset-password" element={<ResetPassword />} />
+      
+      {/* Protected routes with layout */}
+      <Route path="/dashboard" element={
+        <ProtectedRoute>
+          <Layout>
+            <Dashboard />
+          </Layout>
+        </ProtectedRoute>
+      } />
+      <Route path="/skills" element={
+        <ProtectedRoute>
+          <Layout>
+            <MySkills />
+          </Layout>
+        </ProtectedRoute>
+      } />
+      <Route path="/assessment" element={
+        <ProtectedRoute>
+          <Layout>
+            <Assessment />
+          </Layout>
+        </ProtectedRoute>
+      } />
+      <Route path="/gap-jobs" element={
+        <ProtectedRoute>
+          <Layout>
+            <GapAndJobs />
+          </Layout>
+        </ProtectedRoute>
+      } />
+      <Route path="/peer/request" element={
+        <ProtectedRoute>
+          <Layout>
+            <PeerReviewRequest />
+          </Layout>
+        </ProtectedRoute>
+      } />
+      <Route path="/peerreviewrequest" element={
+        <ProtectedRoute>
+          <Layout>
+            <PeerReviewRequest />
+          </Layout>
+        </ProtectedRoute>
+      } />
+      <Route path="/peer/complete" element={
+        <ProtectedRoute>
+          <Layout>
+            <PeerReviewCompletion />
+          </Layout>
+        </ProtectedRoute>
+      } />
+      <Route path="/peer/history" element={
+        <ProtectedRoute>
+          <Layout>
+            <PeerReviewHistory />
+          </Layout>
+        </ProtectedRoute>
+      } />
+      <Route path="/profile" element={
+        <ProtectedRoute>
+          <Layout>
+            <Profile />
+          </Layout>
+        </ProtectedRoute>
+      } />
+    </Routes>
   )
 }
 

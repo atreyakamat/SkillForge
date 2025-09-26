@@ -4,7 +4,7 @@ import { BrowserRouter } from 'react-router-dom'
 import App from './App.jsx'
 import './index.css'
 import ErrorBoundary from './components/common/ErrorBoundary.jsx'
-import { AuthProvider } from './contexts/AuthContext'
+import { AuthProvider } from './contexts/AuthContext.jsx'
 import { SkillProvider } from './contexts/SkillContext.jsx'
 import { PeerReviewProvider } from './contexts/PeerReviewContext.jsx'
 
