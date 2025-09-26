@@ -32,7 +32,7 @@ export default function GapAnalysis() {
     <div className="space-y-4">
       <SkillChart type="radar" data={radarData} options={{ plugins: { legend: { position: 'bottom' } } }} />
       <div className="bg-white border rounded-xl p-4">
-        <div className="font-semibold mb-2">Skill Gap Heatmap</div>
+        <div className="font-semibold mb-2">Skill Development Heatmap</div>
         <div className="grid grid-cols-10 gap-2">
           {heat.map((h)=> <HeatCell key={h.skill} value={100 - h.gap} />)}
         </div>

@@ -4,7 +4,7 @@ import { analyzeSkills, prioritizeGapsByImpact } from '../services/skillAnalysis
 import { rankJobs } from '../services/jobMatching.js'
 import { generateLearningPath } from '../services/recommendations.js'
 
-export async function calculateSkillGaps(req, res) {
+export async function getSkillDevelopmentPlan(req, res) {
   const user = await User.findById(req.params.userId)
   if (!user) return res.status(404).json({ success: false, message: 'User not found' })
   const userLevels = Object.fromEntries((user.skills || []).map(s => [s.name, s.selfRating || 0]))
@@ -16,7 +16,7 @@ export async function calculateSkillGaps(req, res) {
   }))
   const { gaps } = analyzeSkills(userLevels, required)
   const prioritized = prioritizeGapsByImpact(gaps)
-  res.json({ success: true, gaps: prioritized })
+  res.json({ success: true, developmentPlan: prioritized, skillAnalysis: gaps })
 }
 
 export async function getJobMatches(req, res) {

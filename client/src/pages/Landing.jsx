@@ -16,7 +16,7 @@ export default function Landing() {
       <section className="py-16 md:py-20 bg-gray-50">
         <div className="max-w-6xl mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">
           <div className="text-center md:text-left">
-            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 leading-tight mb-4">Discover Your Skill Gaps, Accelerate Your Career</h1>
+            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 leading-tight mb-4">Forge Your Skills, Accelerate Your Career</h1>
             <p className="text-lg text-gray-600 mb-8">Take control of your professional development. Identify strengths and weaknesses to create a personalized learning path for success.</p>
             <div className="flex justify-center md:justify-start gap-4">
               <Link to="/assessment" className="bg-primary-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-primary-700 transition">Start Free Assessment</Link>
@@ -83,7 +83,7 @@ export default function Landing() {
       <section className="py-12">
         <div className="max-w-4xl mx-auto px-6 text-center">
           <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">Watch a 2‑minute Demo</h2>
-          <p className="text-gray-600 mb-6">Get a quick overview of how SkillForge helps you identify and close skill gaps.</p>
+          <p className="text-gray-600 mb-6">Get a quick overview of how SkillForge helps you develop and enhance your professional skills.</p>
           <div className="rounded-xl overflow-hidden border border-gray-200 shadow-sm bg-black">
             <video src="/demo.mp4" controls className="w-full h-auto" preload="metadata"></video>
           </div>

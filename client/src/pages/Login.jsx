@@ -10,7 +10,7 @@ export default function Login() {
           <div className="w-full max-w-md">
             <div className="text-center mb-8">
               <h1 className="text-3xl font-bold">Welcome Back</h1>
-              <p className="text-gray-600 dark:text-gray-400 mt-2">Sign in to your Personal Learning Skill Gap Analyzer account.</p>
+              <p className="text-gray-600 dark:text-gray-400 mt-2">Sign in to your SkillForge account.</p>
             </div>
             <div className="bg-white dark:bg-gray-800/60 p-8 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700">
               <LoginForm />
@@ -24,7 +24,7 @@ export default function Login() {
           <div className="text-center max-w-md">
             <img alt="Skill Gap Analysis illustration" className="max-w-sm mx-auto rounded-lg shadow" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDLIGErBYJcDh9PZK3DxVNBeKpLyqbLjEt_oqwE84cQhBCa_7kR79kw7Fyc7X5fs-o4FKWNKxmIyr4HqAOOdInsVXP9pqIDS3truLx8OP-WJ8dw8omzclm0izKcfRjJqUZtu_Vre8Tsj9eE-_kYgSVFc402eYV-fZf1EEYg-k4uxN6HqjY1BYf6aR2vBVFfFmaw3lPCifOEyCfNGW0ckez_Avcor5H61-aHc0I1q7tLxhTYco5ohopQTqJVGYm3qx4TUZeLe45L98E" />
             <h2 className="mt-6 text-2xl font-bold">Unlock Your Potential</h2>
-            <p className="mt-2 text-gray-700 dark:text-gray-300">Identify your skill gaps and get personalized learning recommendations to advance your career.</p>
+            <p className="mt-2 text-gray-700 dark:text-gray-300">Develop your skills and get personalized learning recommendations to advance your career.</p>
           </div>
         </div>
       </div>

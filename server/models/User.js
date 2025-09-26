@@ -29,7 +29,7 @@ const userSchema = new mongoose.Schema({
   name: { type: String },
   email: { type: String, required: true, unique: true, index: true },
   passwordHash: { type: String, required: true },
-  role: { type: String, enum: ['user', 'admin'], default: 'user' },
+  role: { type: String, enum: ['Developer', 'Designer', 'Manager', 'Product', 'Data', 'user', 'admin'], default: 'Developer' },
   profilePicture: { type: String },
   skills: { type: [skillSchema], default: [] },
   careerGoals: { type: String },

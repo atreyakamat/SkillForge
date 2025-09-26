@@ -3,6 +3,7 @@ import cors from 'cors'
 import helmet from 'helmet'
 import morgan from 'morgan'
 import dotenv from 'dotenv'
+// Restart trigger
 import rateLimit from 'express-rate-limit'
 import mongoose from 'mongoose'
 import jwt from 'jsonwebtoken'
@@ -48,8 +49,8 @@ app.use(limiter)
 app.get('/', (req, res) => {
   res.json({
     ok: true,
-    message: "Skill Gap Analyzer API root",
-    service: 'skill-gap-analyzer-api'
+    message: "SkillForge API root",
+    service: 'skillforge-api'
   })
 })
 
@@ -57,7 +58,7 @@ app.get('/', (req, res) => {
 app.get('/health', (req, res) => {
   res.json({
     success: true,
-    service: 'skill-gap-analyzer-api',
+    service: 'skillforge-api',
     env: process.env.NODE_ENV || 'development',
     db: getDatabaseHealth()
   })

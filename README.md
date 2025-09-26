@@ -1,4 +1,4 @@
-# SkillForge - Personal Learning Skill Gap Analyzer
+# SkillForge - Personal Learning and Career Development Platform
 
 A comprehensive skill assessment and gap analysis platform built with React and Node.js.
 

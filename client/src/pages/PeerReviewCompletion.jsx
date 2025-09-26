@@ -8,7 +8,7 @@ export default function PeerReviewCompletion() {
           <div className="flex h-16 items-center justify-between">
             <div className="flex items-center gap-4 text-gray-900 dark:text-white">
               <span className="material-symbols-outlined text-primary text-3xl">assessment</span>
-              <h2 className="text-lg font-bold">SkillGap</h2>
+              <h2 className="text-lg font-bold">SkillForge</h2>
             </div>
             <nav className="hidden md:flex flex-1 justify-center gap-8">
               <a href="#" className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary">Home</a>

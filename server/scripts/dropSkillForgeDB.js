@@ -3,7 +3,7 @@ import dotenv from 'dotenv'
 
 dotenv.config()
 
-async function dropSkillgapDatabase() {
+async function dropSkillForgeDatabase() {
   try {
     // Connect to MongoDB
     const uri = process.env.MONGODB_URI || process.env.MONGO_URI || 'mongodb://localhost:27017/skillforge'
@@ -18,15 +18,15 @@ async function dropSkillgapDatabase() {
     const databases = await adminDb.listDatabases()
     console.log('Available databases:', databases.databases.map(db => db.name))
 
-    // Check if skillgap database exists
-    const skillgapExists = databases.databases.some(db => db.name === 'skillgap')
+    // Check if SkillForge database exists
+    const skillforgeExists = databases.databases.some(db => db.name === 'skillforge')
     
-    if (skillgapExists) {
-      // Drop the skillgap database
-      await db.getSiblingDB('skillgap').dropDatabase()
-      console.log('✅ Successfully dropped skillgap database')
+    if (skillforgeExists) {
+      // Drop the SkillForge database
+      await db.getSiblingDB('skillforge').dropDatabase()
+      console.log('✅ Successfully dropped SkillForge database')
     } else {
-      console.log('ℹ️  skillgap database does not exist')
+      console.log('ℹ️  SkillForge database does not exist')
     }
 
     // List databases again to confirm
@@ -34,7 +34,7 @@ async function dropSkillgapDatabase() {
     console.log('Remaining databases:', updatedDatabases.databases.map(db => db.name))
 
   } catch (error) {
-    console.error('❌ Error dropping skillgap database:', error)
+    console.error('❌ Error dropping SkillForge database:', error)
   } finally {
     await mongoose.disconnect()
     console.log('Disconnected from MongoDB')
@@ -42,4 +42,4 @@ async function dropSkillgapDatabase() {
 }
 
 // Run the script
-dropSkillgapDatabase()
+dropSkillForgeDatabase()

@@ -19,13 +19,16 @@ export default function LoginForm() {
   const [loading, setLoading] = useState(false)
 
   async function onSubmit(values: LoginInputs) {
+    console.log('🔐 Login form submission started with:', { email: values.email })
     setServerError('')
     setLoading(true)
     try {
-      await login(values)
+      await login(values.email, values.password)
+      console.log('✅ Login successful, navigating to dashboard')
       navigate('/dashboard')
     } catch (err: any) {
-      setServerError(err?.response?.data?.message || 'Login failed')
+      console.error('❌ Login error:', err)
+      setServerError(err?.message || 'Login failed')
     } finally {
       setLoading(false)
     }

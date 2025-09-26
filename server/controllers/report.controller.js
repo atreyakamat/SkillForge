@@ -292,13 +292,13 @@ export async function createTeamReport(req, res) {
     const analytics = {
       teamSize: teamReport.length,
       teamAvgRating: teamReport.length ? (teamReport.reduce((sum, m) => sum + m.avgRating, 0) / teamReport.length).toFixed(2) : 0,
-      totalSkillGaps: teamReport.reduce((sum, m) => sum + m.gapCount, 0),
+      developmentOpportunities: teamReport.reduce((sum, m) => sum + m.gapCount, 0),
       topPerformers: teamReport.filter(m => m.avgRating >= 8).length,
       needsImprovement: teamReport.filter(m => m.avgRating < 6).length,
       commonSkills: matrix.skills.filter(skill => 
         matrix.rows.filter(row => row.levels[skill] > 0).length >= Math.ceil(teamReport.length * 0.7)
       ),
-      skillGaps: matrix.skills.filter(skill => 
+      skillDevelopmentAreas: matrix.skills.filter(skill => 
         matrix.rows.filter(row => row.levels[skill] < 6).length >= Math.ceil(teamReport.length * 0.5)
       )
     }

@@ -34,6 +34,7 @@ export default function RegisterForm() {
   const strength = useMemo(() => getStrength(password || ''), [password])
 
   async function onSubmit(values: RegisterInputs) {
+    console.log('🚀 Form submission started with values:', values)
     setServerError('')
     setLoading(true)
     try {
@@ -41,10 +42,16 @@ export default function RegisterForm() {
         setServerError('Passwords do not match')
         return
       }
-      await register({ name: values.name, email: values.email, password: values.password, role: values.role })
+      
+      const registrationData = { name: values.name, email: values.email, password: values.password, role: values.role }
+      console.log('📤 Sending registration data:', registrationData)
+      
+      await register(registrationData)
+      console.log('✅ Registration successful, navigating to dashboard')
       navigate('/dashboard')
     } catch (err: any) {
-      setServerError(err?.response?.data?.message || 'Registration failed')
+      console.error('❌ Registration error:', err)
+      setServerError(err?.message || 'Registration failed')
     } finally {
       setLoading(false)
     }
@@ -54,7 +61,7 @@ export default function RegisterForm() {
     <div className="max-w-md mx-auto mt-10">
       <div className="bg-white border rounded-xl shadow-sm p-6">
         <h1 className="text-2xl font-semibold mb-1">Create account</h1>
-        <p className="text-sm text-gray-600 mb-6">Join SkillForge to analyze your skill gaps</p>
+        <p className="text-sm text-gray-600 mb-6">Join SkillForge to develop your professional skills</p>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div>
             <label className="block text-sm mb-1">Full name</label>

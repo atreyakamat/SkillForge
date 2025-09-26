@@ -27,7 +27,6 @@ export default function Dashboard() {
   ]
 
   return (
-    <Layout>
       <div className="space-y-6">
           <SearchHeader />
           <QuickStats />
@@ -65,7 +64,6 @@ export default function Dashboard() {
           <PeerReview />
           <ReviewHistory />
       </div>
-    </Layout>
   )
 }
 
