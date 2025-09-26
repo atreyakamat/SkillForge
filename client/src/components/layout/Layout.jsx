@@ -35,7 +35,7 @@ export default function Layout({ children }) {
         </div>
       </div>
 
-      <div className="max-w-[1280px] mx-auto px-8 grid md:[grid-template-columns:280px_1fr] gap-6 mt-8">
+      <div className="w-full px-8 grid md:[grid-template-columns:280px_1fr] gap-6 mt-8">
         <Sidebar className="hidden md:block" />
         <div>
           <div className="flex justify-end">

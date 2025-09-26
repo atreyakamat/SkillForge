@@ -6,7 +6,7 @@ export default function Header({ onMenuToggle }) {
 
   return (
     <header className="h-16 border-b bg-white sticky top-0 z-10">
-      <div className="h-full max-w-[1280px] mx-auto px-8 flex items-center justify-between">
+      <div className="h-full w-full px-8 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <button className="md:hidden p-2 rounded hover:bg-gray-100" aria-label="Open menu" onClick={onMenuToggle}>
             <Menu className="h-5 w-5" />
