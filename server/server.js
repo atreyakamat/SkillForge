@@ -11,6 +11,7 @@ import { requireAuth } from './middleware/auth.js'
 import authRoutes from './routes/auth.routes.js'
 import userRoutes from './routes/user.routes.js'
 import assessmentRoutes from './routes/assessment.routes.js'
+import skillsRoutes from './routes/skills.routes.js'
 import { notFound, errorHandler } from './middleware/errorHandler.js'
 
 dotenv.config()
@@ -87,6 +88,7 @@ app.get('/protected', requireAuth, (req, res) => {
 app.use('/api/auth', authRoutes)
 app.use('/api/users', userRoutes)
 app.use('/api/assessments', assessmentRoutes)
+app.use('/api/skills', skillsRoutes)
 
 // Errors
 app.use(notFound)
