@@ -5,8 +5,8 @@ import morgan from 'morgan'
 import dotenv from 'dotenv'
 import rateLimit from 'express-rate-limit'
 import mongoose from 'mongoose'
+import jwt from 'jsonwebtoken'
 import { connectDb } from './config/db.js'
-import { signAccessToken } from './config/jwt.js'
 import { requireAuth } from './middleware/auth.js'
 import authRoutes from './routes/auth.routes.js'
 import userRoutes from './routes/user.routes.js'
@@ -65,7 +65,8 @@ app.get('/health/test-token', (req, res) => {
     id: 'test-user-123',
     role: 'user'
   }
-  const token = signAccessToken(testPayload)
+  // Use jwt directly for test endpoint
+  const token = jwt.sign(testPayload, process.env.JWT_SECRET || 'dev-secret', { expiresIn: '1h' })
   res.json({
     success: true,
     token: token
