@@ -24,9 +24,14 @@ const peerReviewSchema = new mongoose.Schema({
 
 // Compound indexes for efficient querying
 peerReviewSchema.index({ reviewer: 1, reviewee: 1, status: 1 })
+<<<<<<< HEAD
 peerReviewSchema.index({ reviewer: 1 })
 peerReviewSchema.index({ reviewee: 1 })
 peerReviewSchema.index({ status: 1 })
+=======
+peerReviewSchema.index({ reviewee: 1, createdAt: -1 })
+peerReviewSchema.index({ reviewer: 1, createdAt: -1 })
+>>>>>>> 1d3b6a9f1ea76a99356112c0b3479ac218972df2
 
 export default mongoose.model('PeerReview', peerReviewSchema)
 

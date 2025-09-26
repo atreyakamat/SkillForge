@@ -14,7 +14,9 @@ export function errorHandler(err, req, res, next) {
 
   const response = {
     success: false,
-    message
+    data: null,
+    message,
+    error: isProd ? undefined : (err.errors || err)
   }
 
   if (!isProd) {

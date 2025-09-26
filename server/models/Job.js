@@ -23,9 +23,15 @@ const jobSchema = new mongoose.Schema({
   careerLevel: { type: String, enum: ['junior', 'mid', 'senior', 'lead'], default: 'mid' }
 }, { timestamps: true })
 
+<<<<<<< HEAD
 // Indexes for filtering
 jobSchema.index({ industry: 1 })
 jobSchema.index({ 'requiredSkills.name': 1 })
+=======
+jobSchema.index({ industry: 1 })
+jobSchema.index({ 'requiredSkills.name': 1, industry: 1 })
+jobSchema.index({ postDate: -1 })
+>>>>>>> 1d3b6a9f1ea76a99356112c0b3479ac218972df2
 
 export default mongoose.model('Job', jobSchema)
 

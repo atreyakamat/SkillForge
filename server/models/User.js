@@ -26,6 +26,7 @@ const preferencesSchema = new mongoose.Schema({
 }, { _id: false })
 
 const userSchema = new mongoose.Schema({
+<<<<<<< HEAD
   name: { 
     type: String, 
     required: [true, 'Name is required'],
@@ -55,6 +56,12 @@ const userSchema = new mongoose.Schema({
     required: true,
     enum: ['Technology', 'Finance', 'Healthcare', 'Education', 'Other']
   },
+=======
+  name: { type: String },
+  email: { type: String, required: true, unique: true, index: true, lowercase: true, trim: true, match: /.+@.+\..+/ },
+  passwordHash: { type: String, required: true },
+  role: { type: String, enum: ['user', 'admin'], default: 'user' },
+>>>>>>> 1d3b6a9f1ea76a99356112c0b3479ac218972df2
   profilePicture: { type: String },
   skills: { type: [skillSchema], default: [] },
   careerGoals: { type: [String], default: [] },
@@ -66,6 +73,7 @@ const userSchema = new mongoose.Schema({
   deletedAt: { type: Date, default: null }
 }, { timestamps: true })
 
+<<<<<<< HEAD
 // Hash password before saving
 userSchema.pre('save', async function(next) {
   // Only hash password if it was modified and it's a plain password (not already hashed)
@@ -83,6 +91,11 @@ userSchema.pre('save', async function(next) {
 });
 
 // Method to check password (maintain existing functionality)
+=======
+userSchema.index({ email: 1 }, { unique: true })
+userSchema.index({ 'skills.name': 1 })
+
+>>>>>>> 1d3b6a9f1ea76a99356112c0b3479ac218972df2
 userSchema.methods.comparePassword = function comparePassword(password) {
   return bcrypt.compare(password, this.passwordHash)
 }
