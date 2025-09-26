@@ -430,7 +430,7 @@ class GapAnalysisService {
       return bEfficiency - aEfficiency
     })
 
-    return sortedGaps.slice(0, 8).map((gap, index) => ({
+    return Promise.all(sortedGaps.slice(0, 8).map(async (gap, index) => ({
       order: index + 1,
       skill: gap.skill,
       currentLevel: gap.current,
@@ -439,7 +439,7 @@ class GapAnalysisService {
       difficulty: gap.difficulty,
       priority: gap.priority,
       resources: await this._getSkillResources(gap.skill)
-    }))
+    })))
   }
 
   _generateGapRecommendations(analysis) {

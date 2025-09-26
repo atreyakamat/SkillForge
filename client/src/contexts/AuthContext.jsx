@@ -3,6 +3,8 @@ import { getStoredToken, removeStoredToken, setStoredToken } from '../utils/stor
 
 const AuthContext = createContext(null)
 
+export { AuthContext }
+
 const API_BASE_URL = 'http://localhost:5000/api'
 
 export function AuthProvider({ children }) {

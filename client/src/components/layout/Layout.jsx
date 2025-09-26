@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import Header from '../dashboard/Header.jsx'
 import Sidebar from '../dashboard/Sidebar.jsx'
 import Footer from '../ui/Footer.jsx'
+import ChatBot from '../chat/ChatBot.jsx'
 
 export default function Layout({ children }) {
   const [theme, setTheme] = useState('light')
@@ -45,6 +46,7 @@ export default function Layout({ children }) {
           <Footer />
         </div>
       </div>
+      <ChatBot />
     </div>
   )
 }

@@ -472,3 +472,6 @@ class PeerReviewAPI {
 
 // Export singleton instance
 export default new PeerReviewAPI()
+
+// Also export as peerAPI for compatibility
+export const peerAPI = new PeerReviewAPI()

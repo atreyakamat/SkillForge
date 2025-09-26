@@ -17,6 +17,7 @@ import peerRoutes from './routes/peer.routes.js'
 import analyticsRoutes from './routes/analytics.routes.js'
 import reportsRoutes from './routes/reports.routes.js'
 import jobsRoutes from './routes/jobs.routes.js'
+import chatRoutes from './routes/chat.routes.js'
 import testRoutes from './routes/test.routes.js'
 import { notFound, errorHandler } from './middleware/errorHandler.js'
 
@@ -99,6 +100,7 @@ app.use('/api/peer', peerRoutes)
 app.use('/api/analytics', analyticsRoutes)
 app.use('/api/reports', reportsRoutes)
 app.use('/api/jobs', jobsRoutes)
+app.use('/api/chat', chatRoutes)
 
 // Test routes (only available in test environment)
 if (process.env.NODE_ENV === 'test') {

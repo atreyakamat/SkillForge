@@ -226,3 +226,7 @@ function shape(resData) {
 const api = { setToken, instance }
 export default api
 
+// Export individual APIs and instance for compatibility
+export { instance, analyticsAPI }
+export { analyticsAPI as jobsAPI }
+

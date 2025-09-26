@@ -12,8 +12,8 @@ import {
   getIndustryAnalytics,
   trackJobApplication
 } from '../controllers/jobController.js'
-import { auth } from '../middleware/auth.js'
-import { rateLimit } from '../middleware/rateLimit.js'
+import { requireAuth as auth } from '../middleware/auth.js'
+import { authLimiter as rateLimit } from '../middleware/rateLimit.js'
 // Legacy imports for backwards compatibility
 import { requireAuth } from '../middleware/auth.js'
 import { seedJobs, getAllJobs } from '../controllers/jobs.controller.js'

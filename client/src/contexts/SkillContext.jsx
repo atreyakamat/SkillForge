@@ -3,6 +3,8 @@ import skillsAPI from '../services/skillsAPI.js'
 
 const SkillContext = createContext(null)
 
+export { SkillContext }
+
 // Action types for reducer
 const SKILL_ACTIONS = {
   SET_LOADING: 'SET_LOADING',
