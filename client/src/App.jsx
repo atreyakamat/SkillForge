@@ -8,6 +8,7 @@ import Register from './pages/Register.jsx'
 import Assessment from './pages/Assessment.jsx'
 import PeerReviewRequest from './pages/PeerReviewRequest.jsx'
 import PeerReviewCompletion from './pages/PeerReviewCompletion.jsx'
+import PeerReviewHistory from './pages/PeerReviewHistory.jsx'
 import NavBar from './components/common/NavBar.jsx'
 import ProtectedRoute from './components/auth/ProtectedRoute'
 
@@ -27,6 +28,7 @@ export default function App() {
           <Route path="/peer/request" element={<PeerReviewRequest />} />
           <Route path="/peerreviewrequest" element={<PeerReviewRequest />} />
           <Route path="/peer/complete" element={<PeerReviewCompletion />} />
+          <Route path="/peer/history" element={<PeerReviewHistory />} />
         </Routes>
       </main>
     </div>
