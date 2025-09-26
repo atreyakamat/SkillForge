@@ -5,21 +5,19 @@ import {
   CategoryScale,
   LinearScale,
   PointElement,
-  LineElement,
   BarElement,
   ArcElement,
   Tooltip,
   Legend,
   Title
 } from 'chart.js'
-import { Radar, Bar, Line, Doughnut, Polar } from 'react-chartjs-2'
+import { Radar, Bar, Doughnut } from 'react-chartjs-2'
 
 ChartJS.register(
   RadialLinearScale,
   CategoryScale,
   LinearScale,
   PointElement,
-  LineElement,
   BarElement,
   ArcElement,
   Tooltip,

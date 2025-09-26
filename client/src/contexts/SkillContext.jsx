@@ -3,6 +3,9 @@ import skillsAPI from '../services/skillsAPI.js'
 
 const SkillContext = createContext(null)
 
+// Export the context for any legacy imports (though useSkillContext is preferred)
+export { SkillContext }
+
 // Action types for reducer
 const SKILL_ACTIONS = {
   SET_LOADING: 'SET_LOADING',
@@ -453,9 +456,19 @@ export function SkillProvider({ children }) {
         dispatch({ type: SKILL_ACTIONS.SET_TRENDING_SKILLS, payload: result.skills })
         return result.skills
       } else {
+        // Silently handle route not found errors for optional features
+        if (result.status === 404 || result.message?.includes('Route not found')) {
+          console.log('Trending skills endpoint not implemented yet')
+          return []
+        }
         throw new Error(result.message)
       }
     } catch (error) {
+      // Don't show error for 404s - just log and return empty array
+      if (error.message?.includes('Route not found') || error.message?.includes('404')) {
+        console.log('Trending skills endpoint not available')
+        return []
+      }
       handleError(error, 'Fetch trending skills')
       return []
     }

@@ -2,22 +2,15 @@ import Layout from '../components/layout/Layout.jsx'
 import QuickStats from '../components/dashboard/QuickStats.jsx'
 import SkillOverview from '../components/dashboard/SkillOverview.jsx'
 import ActivityFeed from '../components/dashboard/ActivityFeed.jsx'
-import PeerReview from '../components/peer/PeerReview.jsx'
-import ReviewRequest from '../components/peer/ReviewRequest.jsx'
-import ReviewHistory from '../components/peer/ReviewHistory.jsx'
-import PeerMatch from '../components/peer/PeerMatch.jsx'
-import GapAnalysis from '../components/analytics/GapAnalysis.jsx'
 import JobMatches from '../components/analytics/JobMatches.jsx'
-import Recommendations from '../components/analytics/Recommendations.jsx'
-import IndustryComparison from '../components/analytics/IndustryComparison.jsx'
 import SearchHeader from '../components/dashboard/SearchHeader.jsx'
 import KpiRing from '../components/dashboard/KpiRing.jsx'
 import SkillTable from '../components/dashboard/SkillTable.jsx'
-import { useSkillContext } from '../contexts/SkillContext.jsx'
 import { Link } from 'react-router-dom'
 
 export default function Dashboard() {
-  const { skills = [] } = useSkillContext()
+  // Using sample data to avoid API dependency issues
+  const skills = []
 
   const sampleSkills = skills.length ? skills : [
     { id: '1', name: 'JavaScript', category: 'Frontend', self: 4.5, peer: 4 },
@@ -55,14 +48,7 @@ export default function Dashboard() {
           <SkillOverview skills={sampleSkills} />
           <ActivityFeed />
           <SkillTable />
-          <GapAnalysis />
           <JobMatches />
-          <Recommendations />
-          <IndustryComparison />
-          <PeerMatch />
-          <ReviewRequest />
-          <PeerReview />
-          <ReviewHistory />
       </div>
   )
 }

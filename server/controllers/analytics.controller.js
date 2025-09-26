@@ -9,9 +9,9 @@ export async function getSkillDevelopmentPlan(req, res) {
   if (!user) return res.status(404).json({ success: false, message: 'User not found' })
   const userLevels = Object.fromEntries((user.skills || []).map(s => [s.name, s.selfRating || 0]))
   const jobs = await Job.find({ industry: user.industry }).limit(20)
-  const required = Array.from(new Set(jobs.flatMap(j => j.requiredSkills.map(r => r.name)))).map(name => ({
+  const required = Array.from(new Set(jobs.flatMap(j => (j.skills?.required || []).map(r => r.name)))).map(name => ({
     name,
-    level: Math.round(jobs.reduce((sum,j)=> sum + (j.requiredSkills.find(r => r.name === name)?.level || 0), 0) / Math.max(1, jobs.length)),
+    level: Math.round(jobs.reduce((sum,j)=> sum + ((j.skills?.required || []).find(r => r.name === name)?.level || 0), 0) / Math.max(1, jobs.length)),
     importance: 'preferred'
   }))
   const { gaps } = analyzeSkills(userLevels, required)
@@ -39,9 +39,9 @@ export async function generateLearningPathController(req, res) {
   if (!user) return res.status(404).json({ success: false, message: 'User not found' })
   const userLevels = Object.fromEntries((user.skills || []).map(s => [s.name, s.selfRating || 0]))
   const jobs = await Job.find({ industry: user.industry }).limit(20)
-  const required = Array.from(new Set(jobs.flatMap(j => j.requiredSkills.map(r => r.name)))).map(name => ({
+  const required = Array.from(new Set(jobs.flatMap(j => (j.skills?.required || []).map(r => r.name)))).map(name => ({
     name,
-    level: Math.round(jobs.reduce((sum,j)=> sum + (j.requiredSkills.find(r => r.name === name)?.level || 0), 0) / Math.max(1, jobs.length)),
+    level: Math.round(jobs.reduce((sum,j)=> sum + ((j.skills?.required || []).find(r => r.name === name)?.level || 0), 0) / Math.max(1, jobs.length)),
     importance: 'preferred'
   }))
   const { gaps } = analyzeSkills(userLevels, required)
@@ -54,7 +54,7 @@ export async function getIndustryBenchmarks(req, res) {
   const jobs = await Job.find({ industry }).limit(50)
   const skills = {}
   for (const job of jobs) {
-    for (const r of (job.requiredSkills || [])) {
+    for (const r of (job.skills?.required || [])) {
       skills[r.name] = skills[r.name] || { total: 0, count: 0 }
       skills[r.name].total += r.level
       skills[r.name].count += 1

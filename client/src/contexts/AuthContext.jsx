@@ -53,6 +53,10 @@ export function AuthProvider({ children }) {
         setUser(data.user)
       } catch (error) {
         console.error('❌ AuthContext login error:', error)
+        // Provide user-friendly error messages
+        if (error.name === 'TypeError' && (error.message.includes('fetch') || error.message.includes('Failed to fetch'))) {
+          throw new Error('❌ Cannot connect to backend server. Please start the server with: cd server && node server.js')
+        }
         throw error
       }
     },
@@ -85,6 +89,10 @@ export function AuthProvider({ children }) {
         setUser(data.user)
       } catch (error) {
         console.error('❌ AuthContext register error:', error)
+        // Provide user-friendly error messages
+        if (error.name === 'TypeError' && (error.message.includes('fetch') || error.message.includes('Failed to fetch'))) {
+          throw new Error('❌ Cannot connect to backend server. Please start the server with: cd server && node server.js')
+        }
         throw error
       }
     },

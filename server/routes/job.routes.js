@@ -12,8 +12,9 @@ import {
   getIndustryAnalytics,
   trackJobApplication
 } from '../controllers/jobController.js'
-import { auth } from '../middleware/auth.js'
-import { rateLimit } from '../middleware/rateLimit.js'
+import { requireAuth } from '../middleware/auth.js'
+import { authLimiter, loginLimiter } from '../middleware/rateLimit.js'
+import rateLimit from 'express-rate-limit'
 
 const router = express.Router()
 
@@ -54,7 +55,7 @@ router.get('/matches/:userId',
  * Get detailed skill gap analysis for a user
  */
 router.get('/analytics/gaps/:userId',
-  auth, // Require authentication for detailed analytics
+  requireAuth, // Require authentication for detailed analytics
   [
     param('userId').isMongoId().withMessage('Invalid user ID'),
     query('jobId').optional().isMongoId().withMessage('Invalid job ID'),
@@ -70,7 +71,7 @@ router.get('/analytics/gaps/:userId',
  * Get personalized learning path for a user
  */
 router.get('/analytics/learning-path/:userId',
-  auth,
+  requireAuth,
   [
     param('userId').isMongoId().withMessage('Invalid user ID'),
     query('targetJobId').optional().isMongoId().withMessage('Invalid target job ID'),
@@ -129,7 +130,7 @@ router.get('/:jobId',
  * Save/bookmark a job
  */
 router.post('/save',
-  auth,
+  requireAuth,
   jobActionLimit,
   [
     body('jobId').isMongoId().withMessage('Invalid job ID'),
@@ -144,7 +145,7 @@ router.post('/save',
  * Remove a bookmarked job
  */
 router.delete('/save/:jobId',
-  auth,
+  requireAuth,
   jobActionLimit,
   [
     param('jobId').isMongoId().withMessage('Invalid job ID')
@@ -157,7 +158,7 @@ router.delete('/save/:jobId',
  * Get user's saved jobs
  */
 router.get('/saved',
-  auth,
+  requireAuth,
   [
     query('limit').optional().isInt({ min: 1, max: 50 }).withMessage('Limit must be between 1 and 50'),
     query('offset').optional().isInt({ min: 0 }).withMessage('Offset must be non-negative')
@@ -172,7 +173,7 @@ router.get('/saved',
  * Track a job application
  */
 router.post('/apply',
-  auth,
+  requireAuth,
   jobActionLimit,
   [
     body('jobId').isMongoId().withMessage('Invalid job ID'),
@@ -204,7 +205,7 @@ router.get('/analytics/industry/:industry',
  * Get advanced job matches with detailed analysis
  */
 router.post('/matches/advanced',
-  auth,
+  requireAuth,
   jobSearchLimit,
   [
     body('skills').isArray().withMessage('Skills must be an array'),
@@ -268,7 +269,7 @@ router.post('/matches/advanced',
  * Analyze salary impact of acquiring specific skills
  */
 router.post('/analyze/salary-impact',
-  auth,
+  requireAuth,
   jobActionLimit,
   [
     body('currentSkills').isArray().withMessage('Current skills must be an array'),
@@ -309,7 +310,7 @@ router.post('/analyze/salary-impact',
  * Get personalized job recommendations
  */
 router.get('/recommendations/:userId',
-  auth,
+  requireAuth,
   jobSearchLimit,
   [
     param('userId').isMongoId().withMessage('Invalid user ID'),

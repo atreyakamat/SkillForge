@@ -223,6 +223,9 @@ function shape(resData) {
   return { success: true, data: resData, message: '' }
 }
 
+// Export instance as a named export for other services
+export { instance }
+
 const api = { setToken, instance }
 export default api
 

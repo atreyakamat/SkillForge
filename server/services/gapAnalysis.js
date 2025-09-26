@@ -430,16 +430,20 @@ class GapAnalysisService {
       return bEfficiency - aEfficiency
     })
 
-    return sortedGaps.slice(0, 8).map((gap, index) => ({
-      order: index + 1,
-      skill: gap.skill,
-      currentLevel: gap.current,
-      targetLevel: gap.required,
-      estimatedTime: gap.estimatedTime,
-      difficulty: gap.difficulty,
-      priority: gap.priority,
-      resources: await this._getSkillResources(gap.skill)
-    }))
+    const pathItems = await Promise.all(
+      sortedGaps.slice(0, 8).map(async (gap, index) => ({
+        order: index + 1,
+        skill: gap.skill,
+        currentLevel: gap.current,
+        targetLevel: gap.required,
+        estimatedTime: gap.estimatedTime,
+        difficulty: gap.difficulty,
+        priority: gap.priority,
+        resources: await this._getSkillResources(gap.skill)
+      }))
+    )
+
+    return pathItems
   }
 
   _generateGapRecommendations(analysis) {

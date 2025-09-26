@@ -1,0 +1,8 @@
+{
+  "skills": [{
+    "skillId": "68d712faa324bb5258d54a86",
+    "selfRating": 6,
+    "evidence": "Test evidence for Python programming - have used it for data analysis and web development",
+    "confidenceLevel": "medium"
+  }]
+}

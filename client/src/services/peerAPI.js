@@ -470,5 +470,9 @@ class PeerReviewAPI {
   }
 }
 
-// Export singleton instance
-export default new PeerReviewAPI()
+// Create singleton instance
+const peerAPI = new PeerReviewAPI()
+
+// Export as both named and default export
+export { peerAPI }
+export default peerAPI

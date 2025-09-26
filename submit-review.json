@@ -1,0 +1,16 @@
+{
+  "reviews": [
+    {
+      "skillName": "JavaScript",
+      "rating": 8,
+      "comment": "Strong JavaScript fundamentals with excellent ES6+ knowledge",
+      "confidence": 9
+    },
+    {
+      "skillName": "React", 
+      "rating": 7,
+      "comment": "Good React skills, understands hooks and component lifecycle well",
+      "confidence": 8
+    }
+  ]
+}

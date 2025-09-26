@@ -14,12 +14,14 @@ import Layout from './components/layout/Layout.jsx'
 import ProtectedRoute from './components/auth/ProtectedRoute'
 import MySkills from './pages/MySkills.jsx'
 import GapAndJobs from './pages/GapAndJobs.jsx'
+import TestPage from './pages/TestPage.jsx'
 
 export default function App() {
   return (
     <Routes>
       {/* Public routes without layout */}
       <Route path="/" element={<Landing />} />
+      <Route path="/test" element={<TestPage />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />

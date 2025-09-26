@@ -1,7 +1,8 @@
-import React, { useState, useEffect, useContext } from 'react'
-import { AuthContext } from '../../contexts/AuthContext'
-import { SkillContext } from '../../contexts/SkillContext'
-import { analyticsAPI, jobsAPI } from '../../services/api'
+import React, { useState, useEffect } from 'react'
+import { useAuthContext } from '../../contexts/AuthContext'
+import { useSkillContext } from '../../contexts/SkillContext'
+import { analyticsAPI } from '../../services/api'
+import jobsAPI from '../../services/jobsAPI'
 import SkillChart from './SkillChart'
 import JobMatches from './JobMatches'
 import LearningPath from './LearningPath'
@@ -11,8 +12,8 @@ import MetricCard from './MetricCard'
 import FilterPanel from './FilterPanel'
 
 const GapAnalysis = () => {
-  const { user } = useContext(AuthContext)
-  const { skills: userSkills } = useContext(SkillContext)
+  const { user } = useAuthContext()
+  const { skills: userSkills } = useSkillContext()
   
   // State management
   const [activeTab, setActiveTab] = useState('overview')

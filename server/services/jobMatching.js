@@ -555,7 +555,7 @@ class JobMatchingService {
 // Legacy functions for backward compatibility
 export function computeJobFit(userSkills = {}, job) {
   const weights = { critical: 2, preferred: 1 }
-  const reqs = job.requiredSkills || []
+  const reqs = job.skills?.required || []
   let achieved = 0
   let total = 0
   let missingCritical = 0

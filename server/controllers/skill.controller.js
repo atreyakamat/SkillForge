@@ -28,10 +28,52 @@ export async function getUserSkills(req, res) {
 }
 
 export async function addUserSkill(req, res) {
-  const { skillId, selfRating, confidence, evidence } = req.body
-  const userId = req.user.id
-  const assessment = await Assessment.create({ user: userId, skill: skillId, selfRating, confidence, evidence })
-  res.status(201).json({ success: true, assessment })
+  try {
+    const userId = req.user.id
+    
+    // Handle both single skill and skills array formats
+    let skillsToAdd = []
+    
+    if (req.body.skills && Array.isArray(req.body.skills)) {
+      // Array format: { skills: [{ skillId, selfRating, ... }] }
+      skillsToAdd = req.body.skills
+    } else if (req.body.skillId) {
+      // Single skill format: { skillId, selfRating, ... }
+      skillsToAdd = [req.body]
+    } else {
+      return res.status(400).json({ 
+        success: false, 
+        message: 'Please provide either skillId or skills array' 
+      })
+    }
+    
+    const assessments = []
+    
+    for (const skillData of skillsToAdd) {
+      const { skillId, selfRating, confidence, evidence } = skillData
+      
+      if (!skillId || !selfRating) {
+        return res.status(400).json({
+          success: false,
+          message: 'skillId and selfRating are required for each skill'
+        })
+      }
+      
+      const assessment = await Assessment.create({ 
+        user: userId, 
+        skill: skillId, 
+        selfRating, 
+        confidence: confidence || 5, 
+        evidence: evidence || '' 
+      })
+      assessments.push(assessment)
+    }
+    
+    res.status(201).json({ success: true, assessments })
+  } catch (error) {
+    console.error('Error adding user skill:', error)
+    res.status(500).json({ success: false, message: error.message })
+  }
 }
 
 export async function updateSkillRating(req, res) {

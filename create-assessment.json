@@ -1,0 +1,26 @@
+{
+  "skillId": "68d712faa324bb5258d54a84",
+  "assessmentType": "comprehensive",
+  "responses": [
+    {
+      "criterion": "technical_knowledge",
+      "rating": 7,
+      "evidence": "Strong understanding of JavaScript fundamentals, ES6+ features, and async programming",
+      "weight": 0.5
+    },
+    {
+      "criterion": "practical_application",
+      "rating": 8,
+      "evidence": "Successfully built multiple React applications with complex state management",
+      "weight": 0.3
+    },
+    {
+      "criterion": "problem_solving",
+      "rating": 6,
+      "evidence": "Can debug issues effectively and implement algorithmic solutions",
+      "weight": 0.2
+    }
+  ],
+  "overallRating": 7,
+  "confidenceLevel": "high"
+}
