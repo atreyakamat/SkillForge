@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { PlayCircle, Users, Lightbulb, GraduationCap } from 'lucide-react'
 import Footer from '../components/ui/Footer.jsx'
 
 export default function Landing() {
@@ -16,7 +17,7 @@ export default function Landing() {
             <div className="flex justify-center md:justify-start gap-4">
               <Link to="/assessment" className="bg-primary-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-primary-700 transition">Start Free Assessment</Link>
               <a href="#how-it-works" className="bg-white border border-gray-300 text-gray-900 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition inline-flex items-center gap-2">
-                <span className="material-symbols-outlined text-primary-600">play_circle</span>
+                <PlayCircle className="h-5 w-5 text-primary-600" />
                 <span>Watch 2-min Demo</span>
               </a>
             </div>
@@ -35,21 +36,21 @@ export default function Landing() {
           <div className="grid md:grid-cols-3 gap-8">
             <div className="bg-white p-8 rounded-lg shadow-sm border border-gray-200">
               <div className="bg-primary-100 text-primary-700 rounded-full p-3 inline-flex mb-4">
-                <span className="material-symbols-outlined text-3xl">groups</span>
+                <Users className="h-6 w-6" />
               </div>
               <h3 className="text-xl font-bold text-gray-900 mb-2">Self & Peer Assessment</h3>
               <p className="text-gray-600">Get a 360° view via self-evaluation and anonymous feedback from peers and managers.</p>
             </div>
             <div className="bg-white p-8 rounded-lg shadow-sm border border-gray-200">
               <div className="bg-secondary-100 text-secondary-700 rounded-full p-3 inline-flex mb-4">
-                <span className="material-symbols-outlined text-3xl">lightbulb</span>
+                <Lightbulb className="h-6 w-6" />
               </div>
               <h3 className="text-xl font-bold text-gray-900 mb-2">Intelligent Gap Analysis</h3>
               <p className="text-gray-600">Compare against industry benchmarks to highlight critical gaps and priorities.</p>
             </div>
             <div className="bg-white p-8 rounded-lg shadow-sm border border-gray-200">
               <div className="bg-accent-100 text-accent-700 rounded-full p-3 inline-flex mb-4">
-                <span className="material-symbols-outlined text-3xl">school</span>
+                <GraduationCap className="h-6 w-6" />
               </div>
               <h3 className="text-xl font-bold text-gray-900 mb-2">Personalized Learning</h3>
               <p className="text-gray-600">Curated resources and actionable steps to close gaps and achieve your goals.</p>
@@ -79,8 +80,20 @@ export default function Landing() {
         <div className="max-w-6xl mx-auto px-6">
           <div className="text-center mb-12">
             <p className="text-gray-600 font-semibold">TRUSTED BY PROFESSIONALS</p>
-            <div className="flex flex-wrap justify-center items-center gap-8 mt-6 opacity-70">
-              {logos.map(l => <div key={l} className="h-8 w-24 bg-gray-200 rounded" />)}
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mt-6">
+              {[
+                { name: 'Satya Nadella', company: 'Microsoft', img: 'https://unavatar.io/satyanadella' },
+                { name: 'Sundar Pichai', company: 'Google', img: 'https://unavatar.io/sundarpichai' },
+                { name: 'Tim Cook', company: 'Apple', img: 'https://unavatar.io/tim_cook' }
+              ].map((p, i) => (
+                <div key={i} className="bg-white border border-gray-200 rounded-lg p-4 flex items-center gap-4 text-left">
+                  <img alt={p.name} src={p.img} className="h-12 w-12 rounded-full object-cover" />
+                  <div>
+                    <p className="font-semibold text-gray-900">{p.name}</p>
+                    <p className="text-sm text-gray-600">{p.company}</p>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">

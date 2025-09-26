@@ -3,6 +3,7 @@ import { NavLink } from 'react-router-dom'
 
 const nav = [
   { to: '/dashboard', label: 'Overview', icon: LayoutGrid },
+  { to: '/skills', label: 'My Skills', icon: LayoutGrid },
   { to: '/assessment', label: 'Assess Skills', icon: ShieldCheck },
   { to: '/dashboard/peers', label: 'Peer Reviews', icon: Users },
   { to: '/dashboard/analytics', label: 'Analytics', icon: BarChart3 },

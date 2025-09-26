@@ -8,6 +8,8 @@ import Register from './pages/Register.jsx'
 import Assessment from './pages/Assessment.jsx'
 import NavBar from './components/common/NavBar.jsx'
 import ProtectedRoute from './components/auth/ProtectedRoute'
+import MySkills from './pages/MySkills.jsx'
+import GapAndJobs from './pages/GapAndJobs.jsx'
 
 export default function App() {
   return (
@@ -21,7 +23,9 @@ export default function App() {
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+          <Route path="/skills" element={<ProtectedRoute><MySkills /></ProtectedRoute>} />
           <Route path="/assessment" element={<ProtectedRoute><Assessment /></ProtectedRoute>} />
+          <Route path="/gap-jobs" element={<ProtectedRoute><GapAndJobs /></ProtectedRoute>} />
         </Routes>
       </main>
     </div>
