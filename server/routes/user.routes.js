@@ -1,10 +1,12 @@
 import { Router } from 'express'
-import { me } from '../controllers/user.controller.js'
+import { me, updateProfile, addSkills } from '../controllers/user.controller.js'
 import { requireAuth } from '../middleware/auth.js'
 
 const router = Router()
 
-router.get('/me', requireAuth, me)
+router.get('/profile', requireAuth, me)
+router.put('/profile', requireAuth, updateProfile)
+router.post('/skills', requireAuth, addSkills)
 
 export default router
 
