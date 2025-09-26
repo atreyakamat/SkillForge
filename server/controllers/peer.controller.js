@@ -26,12 +26,12 @@ export async function submitReview(req, res) {
   const { reviews } = req.body
   const userId = req.user.id
   const doc = await PeerReview.findOneAndUpdate(
-    { _id: requestId, reviewee: userId, status: 'pending' },
+    { _id: requestId, reviewer: userId, status: 'pending' },
     { $set: { reviews, status: 'completed', completedAt: new Date() } },
     { new: true }
   )
   if (!doc) return res.status(404).json({ success: false, message: 'Request not found' })
-  res.json({ success: true, review: doc })
+  res.json({ success: true, message: 'Review submitted', review: doc })
 }
 
 export async function getReviewHistory(req, res) {

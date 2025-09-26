@@ -11,6 +11,7 @@ router.post('/submit/:requestId', requireAuth, submitReview)
 router.get('/history/:userId', requireAuth, getReviewHistory)
 router.put('/quality/:reviewId', requireAuth, updateReviewQuality)
 router.post('/recommend', requireAuth, recommendReviewers)
+router.get('/suggest/:userId', requireAuth, recommendReviewers)
 
 export default router
 
