@@ -1,6 +1,3 @@
-<<<<<<< HEAD
-export { AuthProvider, useAuthContext } from './AuthContext.tsx'
-=======
 import React, { createContext, useContext, useEffect, useMemo, useState } from 'react'
 import { getStoredToken, removeStoredToken, setStoredToken } from '../utils/storage.js'
 import api from '../services/api.js'
@@ -30,11 +27,11 @@ export function AuthProvider({ children }) {
     user,
     login: async (email, password) => {
       const { data } = await api.post('/auth/login', { email, password })
-      setToken(data.accessToken)
+      setToken(data.tokens.access)
     },
-    register: async (email, password) => {
-      const { data } = await api.post('/auth/register', { name: email.split('@')[0], email, password })
-      setToken(data.accessToken)
+    register: async (registrationData) => {
+      const { data } = await api.post('/auth/register', registrationData)
+      setToken(data.tokens.access)
     },
     logout: async () => {
       try { await api.post('/auth/logout', {}) } catch {}
@@ -52,5 +49,5 @@ export function useAuthContext() {
   if (!ctx) throw new Error('useAuthContext must be used within AuthProvider')
   return ctx
 }
->>>>>>> backendbranch
+
 
