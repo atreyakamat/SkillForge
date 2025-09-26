@@ -1,8 +1,10 @@
 import { Bell, LogOut, User, Menu } from 'lucide-react'
 import { useAuthContext } from '../../contexts/AuthContext'
+import { useNavigate } from 'react-router-dom'
 
 export default function Header({ onMenuToggle }) {
   const { user, logout } = useAuthContext()
+  const navigate = useNavigate()
 
   return (
     <header className="h-16 border-b bg-white sticky top-0 z-10">
@@ -23,7 +25,10 @@ export default function Header({ onMenuToggle }) {
             <Bell className="h-5 w-5" />
             <span className="absolute -top-0.5 -right-0.5 bg-red-500 text-white text-[10px] leading-none rounded-full px-1">3</span>
           </button>
-          <div className="flex items-center gap-2">
+          <button 
+            onClick={() => navigate('/profile')} 
+            className="flex items-center gap-2 hover:bg-gray-100 rounded-lg p-2 transition-colors"
+          >
             <div className="h-8 w-8 rounded-full bg-primary-100 flex items-center justify-center">
               <User className="h-4 w-4 text-primary-700" />
             </div>
@@ -31,7 +36,7 @@ export default function Header({ onMenuToggle }) {
               <div className="font-medium">{user?.name || user?.email || 'User'}</div>
               <div className="text-gray-500">{user?.role || 'Member'}</div>
             </div>
-          </div>
+          </button>
           <button onClick={logout} className="p-2 rounded hover:bg-gray-100" aria-label="Logout">
             <LogOut className="h-5 w-5" />
           </button>
