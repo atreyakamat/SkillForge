@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useState } from 'react'
 import SkillCategory from './SkillCategory.jsx'
 import { useNavigate } from 'react-router-dom'
+import ProgressBar from '../ui/ProgressBar.jsx'
+import Steps from '../ui/Steps.jsx'
 
 const DRAFT_KEY = 'sf_self_assessment_draft'
 
@@ -56,7 +58,6 @@ export default function SelfAssessment() {
   }
 
   async function submit(peer = false) {
-    // TODO integrate with backend
     setSubmitted(true)
     setTimeout(() => navigate('/dashboard'), 800)
   }
@@ -64,14 +65,18 @@ export default function SelfAssessment() {
   const current = categories[step]
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4" aria-labelledby="assessment-title">
       <div className="bg-white border rounded-xl p-4">
         <div className="flex items-center justify-between">
-          <div className="font-semibold">Self Assessment</div>
-          <div className="text-sm text-gray-600">{saving ? 'Saving draft…' : 'Draft saved'}</div>
+          <div className="font-semibold" id="assessment-title">Self Assessment</div>
+          <div className="text-sm text-gray-600" role="status" aria-live="polite">{saving ? 'Saving draft…' : 'Draft saved'}</div>
         </div>
-        <div className="mt-3 h-2 bg-gray-100 rounded">
-          <div className="h-2 bg-primary-600 rounded" style={{ width: `${progress}%` }} />
+        <div className="mt-3">
+          <ProgressBar value={progress} />
+          <div className="mt-2 flex items-center justify-between">
+            <Steps steps={categories.map(c=>c.title)} current={step} onStepClick={setStep} />
+            <div className="text-sm text-gray-600">{progress}% complete</div>
+          </div>
         </div>
       </div>
 
@@ -80,13 +85,13 @@ export default function SelfAssessment() {
       </div>
 
       <div className="flex items-center justify-between">
-        <div className="text-sm text-gray-600">Step {step + 1} of {categories.length}</div>
+        <div className="text-sm text-gray-600" aria-live="polite">Step {step + 1} of {categories.length}</div>
         <div className="flex gap-2">
-          <button className="px-4 py-2 rounded border" disabled={step===0} onClick={()=>setStep(s=>s-1)}>Back</button>
-          <button className="px-4 py-2 rounded border" disabled={step===categories.length-1} onClick={()=>setStep(s=>s+1)}>Next</button>
-          <button className="px-4 py-2 rounded bg-gray-100" onClick={saveDraft}>Save Draft</button>
-          <button className="px-4 py-2 rounded bg-secondary-600 text-white" onClick={()=>submit(false)}>Submit</button>
-          <button className="px-4 py-2 rounded bg-primary-600 text-white" onClick={()=>submit(true)}>Submit for Peer Review</button>
+          <button className="btn px-4 py-2" disabled={step===0} onClick={()=>setStep(s=>s-1)} aria-label="Previous step">Back</button>
+          <button className="btn px-4 py-2" disabled={step===categories.length-1} onClick={()=>setStep(s=>s+1)} aria-label="Next step">Next</button>
+          <button className="btn btn-secondary" onClick={saveDraft}>Save Draft</button>
+          <button className="btn btn-danger" onClick={()=>submit(false)}>Submit</button>
+          <button className="btn btn-primary" onClick={()=>submit(true)}>Submit for Peer Review</button>
         </div>
       </div>
 

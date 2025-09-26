@@ -6,6 +6,15 @@ export default {
     './src/**/*.{js,jsx,ts,tsx}'
   ],
   theme: {
+    container: {
+      center: true,
+      padding: {
+        DEFAULT: '2rem'
+      },
+      screens: {
+        '2xl': '1280px'
+      }
+    },
     extend: {
       colors: {
         primary: {
@@ -44,13 +53,22 @@ export default {
           800: '#6b21a8',
           900: '#581c87'
         },
-        success: '#10b981',
-        warning: '#f59e0b',
-        danger: '#ef4444'
+        // Semantic tokens
+        brand: { DEFAULT: '#3b82f6', dark: '#1e40af', light: '#dbeafe' },
+        success: { DEFAULT: '#10b981', dark: '#065f46', light: '#d1fae5' },
+        warning: { DEFAULT: '#f59e0b', dark: '#92400e', light: '#fef3c7' },
+        error: { DEFAULT: '#ef4444', dark: '#991b1b', light: '#fecaca' },
+        neutral: { 50: '#f9fafb', 100: '#f3f4f6', 500: '#6b7280', 900: '#111827' }
       },
       fontFamily: {
         sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
         data: ['JetBrains Mono', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'monospace']
+      },
+      fontSize: {
+        h1: ['2.25rem', { lineHeight: '2.5rem', fontWeight: '700' }],
+        h2: ['1.875rem', { lineHeight: '2.25rem', fontWeight: '600' }],
+        h3: ['1.5rem', { lineHeight: '2rem', fontWeight: '600' }],
+        h4: ['1.25rem', { lineHeight: '1.75rem', fontWeight: '500' }]
       },
       screens: {
         xs: '480px',
@@ -81,6 +99,14 @@ export default {
       boxShadow: {
         card: '0 1px 3px rgba(0,0,0,0.1)',
         cardHover: '0 4px 12px rgba(0,0,0,0.12)'
+      },
+      keyframes: {
+        shimmer: {
+          '100%': { transform: 'translateX(100%)' }
+        }
+      },
+      animation: {
+        shimmer: 'shimmer 1.2s infinite'
       }
     }
   },
