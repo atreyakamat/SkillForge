@@ -2,6 +2,7 @@ import express from 'express'
 import cors from 'cors'
 import morgan from 'morgan'
 import dotenv from 'dotenv'
+import helmet from 'helmet'
 import { connectDb } from './config/db.js'
 import authRoutes from './routes/auth.routes.js'
 import userRoutes from './routes/user.routes.js'
@@ -14,6 +15,7 @@ const app = express()
 
 // Middleware
 app.use(cors({ origin: process.env.CORS_ORIGIN || 'http://localhost:5173' }))
+app.use(helmet())
 app.use(express.json())
 app.use(morgan('dev'))
 
