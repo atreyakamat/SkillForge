@@ -9,6 +9,7 @@ import Assessment from './pages/Assessment.jsx'
 import PeerReviewRequest from './pages/PeerReviewRequest.jsx'
 import PeerReviewCompletion from './pages/PeerReviewCompletion.jsx'
 import PeerReviewHistory from './pages/PeerReviewHistory.jsx'
+import Profile from './pages/Profile.jsx'
 import NavBar from './components/common/NavBar.jsx'
 import ProtectedRoute from './components/auth/ProtectedRoute'
 
@@ -29,6 +30,7 @@ export default function App() {
           <Route path="/peerreviewrequest" element={<PeerReviewRequest />} />
           <Route path="/peer/complete" element={<PeerReviewCompletion />} />
           <Route path="/peer/history" element={<PeerReviewHistory />} />
+          <Route path="/profile" element={<Profile />} />
         </Routes>
       </main>
     </div>
