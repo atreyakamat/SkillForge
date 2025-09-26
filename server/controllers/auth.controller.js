@@ -31,8 +31,8 @@ export async function register(req, res) {
   // Send welcome and verification email
   const raw = crypto.randomBytes(32).toString('hex')
   const tokenHash = crypto.createHash('sha256').update(raw).digest('hex')
-  const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000)
-  await ActionToken.create({ user: user._id, purpose: 'email_verify', tokenHash, expiresAt })
+  const tokenExpiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000)
+  await ActionToken.create({ user: user._id, purpose: 'email_verify', tokenHash, expiresAt: tokenExpiresAt })
   const verifyUrl = `${process.env.APP_BASE_URL || 'http://localhost:5173'}/verify?token=${raw}`
   void sendEmail(user.email, 'Welcome to SkillForge - Verify your email', `Verify your email: ${verifyUrl}`)
   const accessToken = signAccessToken(user)
