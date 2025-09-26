@@ -14,15 +14,8 @@ import {
 } from '../controllers/jobController.js'
 import { auth } from '../middleware/auth.js'
 import { rateLimit } from '../middleware/rateLimit.js'
-// Legacy imports for backwards compatibility
-import { requireAuth } from '../middleware/auth.js'
-import { seedJobs, getAllJobs } from '../controllers/jobs.controller.js'
 
 const router = express.Router()
-
-// Legacy routes for backwards compatibility
-router.post('/seed', requireAuth, seedJobs)
-router.get('/legacy', getAllJobs)
 
 // Rate limiting for job-related endpoints
 const jobSearchLimit = rateLimit({
@@ -57,7 +50,7 @@ router.get('/matches/:userId',
 )
 
 /**
- * GET /api/jobs/analytics/gaps/:userId
+ * GET /api/analytics/gaps/:userId
  * Get detailed skill gap analysis for a user
  */
 router.get('/analytics/gaps/:userId',
@@ -73,7 +66,7 @@ router.get('/analytics/gaps/:userId',
 )
 
 /**
- * GET /api/jobs/analytics/learning-path/:userId
+ * GET /api/analytics/learning-path/:userId
  * Get personalized learning path for a user
  */
 router.get('/analytics/learning-path/:userId',
@@ -217,7 +210,14 @@ router.post('/matches/advanced',
     body('skills').isArray().withMessage('Skills must be an array'),
     body('skills.*.name').isString().notEmpty().withMessage('Skill name is required'),
     body('skills.*.level').isInt({ min: 1, max: 5 }).withMessage('Skill level must be between 1 and 5'),
-    body('preferences').optional().isObject().withMessage('Preferences must be an object')
+    body('preferences').optional().isObject().withMessage('Preferences must be an object'),
+    body('preferences.industries').optional().isArray().withMessage('Industries must be an array'),
+    body('preferences.locations').optional().isArray().withMessage('Locations must be an array'),
+    body('preferences.salaryRange').optional().isObject().withMessage('Salary range must be an object'),
+    body('preferences.salaryRange.min').optional().isInt({ min: 0 }).withMessage('Minimum salary must be positive'),
+    body('preferences.salaryRange.max').optional().isInt({ min: 0 }).withMessage('Maximum salary must be positive'),
+    body('preferences.remote').optional().isBoolean().withMessage('Remote preference must be a boolean'),
+    body('preferences.experienceLevels').optional().isArray().withMessage('Experience levels must be an array')
   ],
   async (req, res, next) => {
     try {
@@ -273,7 +273,11 @@ router.post('/analyze/salary-impact',
   [
     body('currentSkills').isArray().withMessage('Current skills must be an array'),
     body('targetSkills').isArray().withMessage('Target skills must be an array'),
-    body('criteria').optional().isObject().withMessage('Criteria must be an object')
+    body('criteria').optional().isObject().withMessage('Criteria must be an object'),
+    body('criteria.industry').optional().isString().withMessage('Industry must be a string'),
+    body('criteria.location').optional().isString().withMessage('Location must be a string'),
+    body('criteria.experienceLevel').optional().isIn(['entry', 'junior', 'mid', 'senior', 'lead', 'executive'])
+      .withMessage('Invalid experience level')
   ],
   async (req, res, next) => {
     try {
@@ -331,6 +335,46 @@ router.get('/recommendations/:userId',
         data: {
           recommendations,
           userId,
+          generatedAt: new Date()
+        }
+      })
+
+    } catch (error) {
+      next(error)
+    }
+  }
+)
+
+/**
+ * POST /api/jobs/similar
+ * Find jobs similar to a given job
+ */
+router.post('/similar',
+  jobSearchLimit,
+  [
+    body('jobId').isMongoId().withMessage('Invalid job ID'),
+    body('userSkills').optional().isArray().withMessage('User skills must be an array'),
+    body('limit').optional().isInt({ min: 1, max: 10 }).withMessage('Limit must be between 1 and 10')
+  ],
+  async (req, res, next) => {
+    try {
+      const { jobId, userSkills, limit = 5 } = req.body
+
+      // Import the job matching service
+      const { jobMatchingService } = await import('../services/jobMatching.js')
+
+      // Find similar jobs
+      const similarJobs = await jobMatchingService.findSimilarJobs(
+        jobId,
+        userSkills,
+        parseInt(limit)
+      )
+
+      res.json({
+        success: true,
+        data: {
+          similarJobs,
+          jobId,
           generatedAt: new Date()
         }
       })

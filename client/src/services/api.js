@@ -1,11 +1,18 @@
 import axios from 'axios'
 
 const BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api'
-let bearerToken = null
+let bearerToken = localStorage.getItem('accessToken')
 let isRefreshing = false
 let pendingQueue = []
 
-const instance = axios.create({ baseURL: BASE_URL, withCredentials: false, timeout: 20000 })
+const instance = axios.create({ 
+  baseURL: BASE_URL, 
+  withCredentials: false, 
+  timeout: 20000,
+  headers: {
+    'Content-Type': 'application/json'
+  }
+})
 
 // Dev logging
 instance.interceptors.request.use((config) => {
@@ -76,15 +83,44 @@ instance.interceptors.response.use(
   }
 )
 
-export function setToken(token) { bearerToken = token }
+// Token management functions
+export function setToken(token) { 
+  bearerToken = token
+  if (token) {
+    localStorage.setItem('accessToken', token)
+  } else {
+    localStorage.removeItem('accessToken')
+  }
+}
+
+export function getToken() {
+  return bearerToken || localStorage.getItem('accessToken')
+}
+
+export function clearTokens() {
+  bearerToken = null
+  localStorage.removeItem('accessToken')
+  localStorage.removeItem('refreshToken')
+}
 
 async function refreshToken() {
   try {
-    const res = await axios.post(`${BASE_URL}/auth/refresh`)
-    const token = res?.data?.token || res?.data?.data?.token
-    if (!token) throw new Error('No token in refresh response')
-    return token
+    const refreshToken = localStorage.getItem('refreshToken')
+    if (!refreshToken) throw new Error('No refresh token available')
+    
+    const res = await axios.post(`${BASE_URL}/auth/refresh`, {}, {
+      headers: { Authorization: `Bearer ${refreshToken}` }
+    })
+    
+    const newToken = res?.data?.tokens?.access || res?.data?.token
+    if (!newToken) throw new Error('No token in refresh response')
+    
+    setToken(newToken)
+    return newToken
   } catch (err) {
+    clearTokens()
+    // Redirect to login page
+    window.location.href = '/login'
     throw err
   }
 }

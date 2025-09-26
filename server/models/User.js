@@ -25,6 +25,27 @@ const preferencesSchema = new mongoose.Schema({
   privacy: { type: String, enum: ['public', 'private', 'friends'], default: 'private' }
 }, { _id: false })
 
+const savedJobSchema = new mongoose.Schema({
+  jobId: { type: mongoose.Schema.Types.ObjectId, ref: 'Job', required: true },
+  savedAt: { type: Date, default: Date.now },
+  notes: { type: String, maxlength: 500 },
+  updatedAt: { type: Date, default: Date.now }
+}, { _id: false })
+
+const jobApplicationSchema = new mongoose.Schema({
+  jobId: { type: mongoose.Schema.Types.ObjectId, ref: 'Job', required: true },
+  appliedAt: { type: Date, default: Date.now },
+  status: { 
+    type: String, 
+    enum: ['applied', 'interviewing', 'offered', 'rejected', 'withdrawn'], 
+    default: 'applied' 
+  },
+  notes: { type: String, maxlength: 1000 },
+  interviewDates: [{ type: Date }],
+  followUpDate: { type: Date },
+  updatedAt: { type: Date, default: Date.now }
+}, { _id: false })
+
 const userSchema = new mongoose.Schema({
   name: { type: String },
   email: { type: String, required: true, unique: true, index: true },
@@ -36,6 +57,12 @@ const userSchema = new mongoose.Schema({
   experienceLevel: { type: String, enum: ['junior', 'mid', 'senior', 'lead'], default: 'junior' },
   industry: { type: String },
   preferences: { type: preferencesSchema, default: () => ({}) },
+  
+  // Job-related fields
+  savedJobs: { type: [savedJobSchema], default: [] },
+  jobApplications: { type: [jobApplicationSchema], default: [] },
+  
+  // Authentication fields
   failedLoginAttempts: { type: Number, default: 0 },
   lockUntil: { type: Date },
   isEmailVerified: { type: Boolean, default: false },
