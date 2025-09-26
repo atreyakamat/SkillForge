@@ -14,6 +14,7 @@ import assessmentRoutes from './routes/assessment.routes.js'
 import skillsRoutes from './routes/skills.routes.js'
 import peerRoutes from './routes/peer.routes.js'
 import analyticsRoutes from './routes/analytics.routes.js'
+import reportsRoutes from './routes/reports.routes.js'
 import jobsRoutes from './routes/jobs.routes.js'
 import { notFound, errorHandler } from './middleware/errorHandler.js'
 
@@ -95,6 +96,7 @@ app.use('/api/assessments', assessmentRoutes)
 app.use('/api/skills', skillsRoutes)
 app.use('/api/peer', peerRoutes)
 app.use('/api/analytics', analyticsRoutes)
+app.use('/api/reports', reportsRoutes)
 app.use('/api/jobs', jobsRoutes)
 
 // Errors
