@@ -39,11 +39,11 @@ export function PeerReviewProvider({ children }) {
     setRequests((r) => r.map(x => x.id === id ? { ...x, status } : x))
   }
 
-  async function submitReview({ forUser, skills, anonymous, comments, confidence }) {
-    const optimistic = { id: crypto.randomUUID(), forUser, skills, anonymous, comments, confidence, ts: Date.now(), status: 'submitting' }
+  async function submitReview({ requestId, forUser, skills, anonymous, comments, confidence }) {
+    const optimistic = { id: crypto.randomUUID(), requestId, forUser, skills, anonymous, comments, confidence, ts: Date.now(), status: 'submitting' }
     setReviews((rs) => [optimistic, ...rs])
     try {
-      const res = await peerAPI.submitReview({ forUser, skills, anonymous, comments, confidence })
+      const res = await peerAPI.submitReviewForRequest(requestId, { forUser, skills, anonymous, comments, confidence })
       const saved = res.data?.review || res.data
       setReviews((rs) => [saved, ...rs.filter(x => x.id !== optimistic.id)])
       addNotification('Peer review submitted')

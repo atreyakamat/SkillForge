@@ -130,30 +130,50 @@ export const skillAPI = {
 
 export const peerAPI = {
   async requestReview(payload) {
-    const { data } = await instance.post('/peer/requests', payload)
+    const { data } = await instance.post('/peer/request', payload)
     return shape(data)
   },
-  async submitReview(payload) {
-    const { data } = await instance.post('/peer/reviews', payload)
+  async submitReviewForRequest(requestId, payload) {
+    const { data } = await instance.post(`/peer/submit/${requestId}`, payload)
     return shape(data)
   },
-  async getReviews(params) {
-    const { data } = await instance.get('/peer/reviews', { params })
+  async getPending() {
+    const { data } = await instance.get('/peer/pending')
+    return shape(data)
+  },
+  async getReceived() {
+    const { data } = await instance.get('/peer/received')
+    return shape(data)
+  },
+  async getReviewHistory(userId) {
+    const { data } = await instance.get(`/peer/history/${userId}`)
+    return shape(data)
+  },
+  async rateReviewQuality(reviewId, payload) {
+    const { data } = await instance.put(`/peer/quality/${reviewId}`, payload)
+    return shape(data)
+  },
+  async recommendReviewers(payload) {
+    const { data } = await instance.post('/peer/recommend', payload)
     return shape(data)
   }
 }
 
 export const analyticsAPI = {
-  async getGapAnalysis() {
-    const { data } = await instance.get('/analytics/gaps')
+  async getGapAnalysis(userId) {
+    const { data } = await instance.get(`/analytics/gaps/${userId}`)
     return shape(data)
   },
-  async getJobMatches() {
-    const { data } = await instance.get('/jobs/matches')
+  async getJobMatches(userId) {
+    const { data } = await instance.get(`/analytics/jobs/matches/${userId}`)
     return shape(data)
   },
-  async getRecommendations() {
-    const { data } = await instance.get('/analytics/recommendations')
+  async getBenchmarks(industry) {
+    const { data } = await instance.get(`/analytics/benchmarks/${encodeURIComponent(industry)}`)
+    return shape(data)
+  },
+  async getSkillTrends(skillName) {
+    const { data } = await instance.get(`/analytics/trends/${encodeURIComponent(skillName)}`)
     return shape(data)
   }
 }
