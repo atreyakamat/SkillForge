@@ -9,12 +9,17 @@ import Assessment from './pages/Assessment.jsx'
 import PeerReviewRequest from './pages/PeerReviewRequest.jsx'
 import PeerReviewCompletion from './pages/PeerReviewCompletion.jsx'
 import PeerReviewHistory from './pages/PeerReviewHistory.jsx'
+import PeerReviewDashboard from './pages/PeerReviewDashboard.jsx'
 import Profile from './pages/Profile.jsx'
+import PublicProfile from './pages/PublicProfile.jsx'
 import Layout from './components/layout/Layout.jsx'
 import ProtectedRoute from './components/auth/ProtectedRoute'
-import MySkills from './pages/MySkills.jsx'
+import Skills from './pages/Skills.jsx'
 import GapAndJobs from './pages/GapAndJobs.jsx'
 import TestPage from './pages/TestPage.jsx'
+import ScheduleMaker from './components/schedule/ScheduleMaker.jsx'
+import ProgressTracker from './components/progress/ProgressTracker.jsx'
+import RecommendationEngine from './components/recommendations/RecommendationEngine.jsx'
 
 export default function App() {
   return (
@@ -38,7 +43,7 @@ export default function App() {
       <Route path="/skills" element={
         <ProtectedRoute>
           <Layout>
-            <MySkills />
+            <Skills />
           </Layout>
         </ProtectedRoute>
       } />
@@ -53,6 +58,34 @@ export default function App() {
         <ProtectedRoute>
           <Layout>
             <GapAndJobs />
+          </Layout>
+        </ProtectedRoute>
+      } />
+      <Route path="/schedule" element={
+        <ProtectedRoute>
+          <Layout>
+            <ScheduleMaker />
+          </Layout>
+        </ProtectedRoute>
+      } />
+      <Route path="/progress" element={
+        <ProtectedRoute>
+          <Layout>
+            <ProgressTracker />
+          </Layout>
+        </ProtectedRoute>
+      } />
+      <Route path="/recommendations" element={
+        <ProtectedRoute>
+          <Layout>
+            <RecommendationEngine />
+          </Layout>
+        </ProtectedRoute>
+      } />
+      <Route path="/peer/dashboard" element={
+        <ProtectedRoute>
+          <Layout>
+            <PeerReviewDashboard />
           </Layout>
         </ProtectedRoute>
       } />
@@ -91,6 +124,9 @@ export default function App() {
           </Layout>
         </ProtectedRoute>
       } />
+      
+      {/* Public Profile Route - No authentication required */}
+      <Route path="/profile/public/:userId" element={<PublicProfile />} />
     </Routes>
   )
 }

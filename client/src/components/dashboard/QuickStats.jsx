@@ -1,4 +1,4 @@
-export default function QuickStats({ totals = { skills: 12, reviews: 8, gapScore: 72, learningHours: 24 } }) {
+export default function QuickStats({ totals = { skills: 0, reviews: 0, gapScore: 0, learningHours: 0 } }) {
   const cards = [
     { label: 'Total Skills', value: totals.skills, color: 'bg-primary-50 text-primary-700' },
     { label: 'Peer Reviews', value: totals.reviews, color: 'bg-secondary-50 text-secondary-700' },

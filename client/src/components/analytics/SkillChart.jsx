@@ -45,26 +45,33 @@ const SkillChart = ({ userSkills, gapData, selectedJob }) => {
 
     const skillMap = new Map()
     
-    // Process user skills
+    // Process user skills (handle both formats: assessment and direct skill objects)
     userSkills.forEach(skill => {
-      skillMap.set(skill.name, {
-        name: skill.name,
-        userLevel: skill.currentLevel || 0,
-        requiredLevel: 0,
-        gap: 0,
-        category: skill.category || 'technical'
-      })
+      const skillName = skill.name || skill.skill?.name || skill.skillName
+      const currentLevel = skill.currentLevel || skill.selfRating || skill.averageRating || 0
+      const category = skill.category || skill.skill?.category || 'technical'
+      
+      if (skillName) {
+        skillMap.set(skillName, {
+          name: skillName,
+          userLevel: currentLevel,
+          requiredLevel: 0,
+          gap: 0,
+          category: category
+        })
+      }
     })
 
-    // Add gap data if available
-    if (gapData?.skillGaps) {
-      gapData.skillGaps.forEach(gap => {
+    // Add gap data if available (support both old and new formats)
+    const skillGaps = gapData?.skillGaps || gapData?.gaps || []
+    if (skillGaps.length > 0) {
+      skillGaps.forEach(gap => {
         const existing = skillMap.get(gap.skill) || {
           name: gap.skill,
           userLevel: gap.currentLevel || 0,
           requiredLevel: 0,
           gap: 0,
-          category: 'technical'
+          category: gap.category || 'technical'
         }
         
         existing.requiredLevel = gap.requiredLevel || 0
@@ -205,7 +212,7 @@ const SkillChart = ({ userSkills, gapData, selectedJob }) => {
             if (viewMode === 'gaps') {
               return `${skillName}: Gap of ${gap} levels`
             }
-            return `${context.dataset.label}: ${value}/5`
+            return `${context.dataset.label}: ${value}/10`
           }
         }
       }
@@ -217,9 +224,9 @@ const SkillChart = ({ userSkills, gapData, selectedJob }) => {
     scales: {
       r: {
         beginAtZero: true,
-        max: 5,
+        max: 10,
         ticks: {
-          stepSize: 1
+          stepSize: 2
         }
       }
     }
@@ -230,7 +237,7 @@ const SkillChart = ({ userSkills, gapData, selectedJob }) => {
     scales: {
       y: {
         beginAtZero: true,
-        max: 5,
+        max: 10,
         ticks: {
           stepSize: 1
         }
@@ -420,10 +427,10 @@ const SkillChart = ({ userSkills, gapData, selectedJob }) => {
                     <div className="w-16 bg-gray-200 rounded-full h-2">
                       <div 
                         className="bg-green-500 h-2 rounded-full"
-                        style={{ width: `${(item.level / 5) * 100}%` }}
+                        style={{ width: `${(item.level / 10) * 100}%` }}
                       />
                     </div>
-                    <span className="text-xs text-gray-500">{item.level}/5</span>
+                    <span className="text-xs text-gray-500">{item.level}/10</span>
                   </div>
                 </div>
               ))

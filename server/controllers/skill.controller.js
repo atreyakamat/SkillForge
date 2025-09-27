@@ -48,6 +48,13 @@ export async function addUserSkill(req, res) {
     }
     
     const assessments = []
+    const userSkillsToAdd = []
+    
+    // Get user for updating skills array
+    const user = await User.findById(userId)
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found' })
+    }
     
     for (const skillData of skillsToAdd) {
       const { skillId, selfRating, confidence, evidence } = skillData
@@ -58,18 +65,63 @@ export async function addUserSkill(req, res) {
           message: 'skillId and selfRating are required for each skill'
         })
       }
+
+      // Get skill details
+      const skill = await Skill.findById(skillId)
+      if (!skill) {
+        return res.status(404).json({
+          success: false,
+          message: `Skill with ID ${skillId} not found`
+        })
+      }
       
-      const assessment = await Assessment.create({ 
-        user: userId, 
-        skill: skillId, 
-        selfRating, 
-        confidence: confidence || 5, 
-        evidence: evidence || '' 
-      })
+      // Create or update assessment
+      const assessment = await Assessment.findOneAndUpdate(
+        { user: userId, skill: skillId },
+        { 
+          selfRating, 
+          confidence: confidence || 5, 
+          evidence: evidence || '',
+          assessmentDate: new Date()
+        },
+        { upsert: true, new: true }
+      )
       assessments.push(assessment)
+
+      // Update or add to user skills array
+      const existingSkillIndex = user.skills.findIndex(s => 
+        s.skillId?.toString() === skillId || s.name === skill.name
+      )
+
+      const userSkill = {
+        skillId: skill._id,
+        name: skill.name,
+        selfRating,
+        evidence: evidence || '',
+        confidenceLevel: confidence <= 3 ? 'low' : confidence <= 7 ? 'medium' : 'high',
+        lastUpdated: new Date()
+      }
+
+      if (existingSkillIndex >= 0) {
+        // Update existing skill
+        user.skills[existingSkillIndex] = { ...user.skills[existingSkillIndex], ...userSkill }
+      } else {
+        // Add new skill
+        user.skills.push(userSkill)
+      }
+      
+      userSkillsToAdd.push(userSkill)
     }
+
+    // Save updated user
+    await user.save()
     
-    res.status(201).json({ success: true, assessments })
+    res.status(201).json({ 
+      success: true, 
+      assessments,
+      userSkills: userSkillsToAdd,
+      message: 'Skills added successfully'
+    })
   } catch (error) {
     console.error('Error adding user skill:', error)
     res.status(500).json({ success: false, message: error.message })
@@ -77,22 +129,67 @@ export async function addUserSkill(req, res) {
 }
 
 export async function updateSkillRating(req, res) {
-  const { skillId } = req.params
-  const { selfRating, confidence, evidence } = req.body
-  const userId = req.user.id
-  const doc = await Assessment.findOneAndUpdate(
-    { user: userId, skill: skillId },
-    { $set: { selfRating, confidence, evidence, assessmentDate: new Date() } },
-    { new: true }
-  )
-  res.json({ success: true, assessment: doc })
+  try {
+    const { skillId } = req.params
+    const { selfRating, confidence, evidence } = req.body
+    const userId = req.user.id
+    
+    // Update assessment
+    const assessment = await Assessment.findOneAndUpdate(
+      { user: userId, skill: skillId },
+      { $set: { selfRating, confidence, evidence, assessmentDate: new Date() } },
+      { new: true }
+    ).populate('skill')
+
+    if (!assessment) {
+      return res.status(404).json({ success: false, message: 'Assessment not found' })
+    }
+
+    // Update user.skills array
+    const user = await User.findById(userId)
+    if (user) {
+      const skillIndex = user.skills.findIndex(s => 
+        s.skillId?.toString() === skillId || s.name === assessment.skill.name
+      )
+
+      if (skillIndex >= 0) {
+        user.skills[skillIndex].selfRating = selfRating
+        user.skills[skillIndex].evidence = evidence || user.skills[skillIndex].evidence
+        user.skills[skillIndex].confidenceLevel = confidence <= 3 ? 'low' : confidence <= 7 ? 'medium' : 'high'
+        user.skills[skillIndex].lastUpdated = new Date()
+        await user.save()
+      }
+    }
+
+    res.json({ success: true, assessment })
+  } catch (error) {
+    console.error('Error updating skill rating:', error)
+    res.status(500).json({ success: false, message: error.message })
+  }
 }
 
 export async function deleteUserSkill(req, res) {
-  const { skillId } = req.params
-  const userId = req.user.id
-  await Assessment.deleteOne({ user: userId, skill: skillId })
-  res.json({ success: true, message: 'Skill removed' })
+  try {
+    const { skillId } = req.params
+    const userId = req.user.id
+    
+    // Delete assessment
+    await Assessment.deleteOne({ user: userId, skill: skillId })
+    
+    // Remove from user.skills array
+    const user = await User.findById(userId)
+    if (user) {
+      user.skills = user.skills.filter(s => 
+        s.skillId?.toString() !== skillId && s.name !== skillId
+      )
+      await user.save()
+    }
+    
+    res.json({ success: true, message: 'Skill removed successfully' })
+  } catch (error) {
+    console.error('Error deleting user skill:', error)
+    res.status(500).json({ success: false, message: error.message })
+  }
 }
 
 function jaccard(a, b) {
@@ -162,6 +259,27 @@ export async function createSkill(req, res) {
     res.status(201).json({ success: true, skill })
   } catch (error) {
     console.error('Error creating skill:', error)
+    res.status(500).json({ success: false, message: error.message })
+  }
+}
+
+export async function getTrendingSkills(req, res) {
+  try {
+    const limit = parseInt(req.query.limit) || 10
+    
+    // Get skills with highest market demand or most assessments
+    const trendingSkills = await Skill.find({})
+      .sort({ marketDemandScore: -1 }) // Sort by market demand score descending
+      .limit(limit)
+      .lean()
+    
+    res.json({ 
+      success: true, 
+      skills: trendingSkills,
+      message: 'Trending skills retrieved successfully'
+    })
+  } catch (error) {
+    console.error('Error getting trending skills:', error)
     res.status(500).json({ success: false, message: error.message })
   }
 }

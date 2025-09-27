@@ -151,3 +151,29 @@ export async function verifyEmail(req, res) {
   res.json({ success: true, message: 'Email verified successfully', user: { id: user._id, email: user.email, verified: true } })
 }
 
+export async function getProfile(req, res) {
+  try {
+    const user = await User.findById(req.user.id).select('-passwordHash').lean()
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found' })
+    }
+    
+    res.json({ 
+      success: true, 
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        industry: user.industry,
+        verified: user.isEmailVerified,
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt
+      }
+    })
+  } catch (error) {
+    console.error('Error fetching user profile:', error)
+    res.status(500).json({ success: false, message: 'Internal server error' })
+  }
+}
+

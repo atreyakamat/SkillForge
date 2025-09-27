@@ -113,3 +113,87 @@ export async function addSkills(req, res) {
   }
 }
 
+export async function getPublicProfile(req, res) {
+  try {
+    const { userId } = req.params
+    
+    // Get user basic info (excluding sensitive data)
+    const user = await User.findById(userId)
+      .select('name email role skills experienceLevel industry createdAt')
+      .lean()
+    
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found' })
+    }
+    
+    // Get user assessments to show skill levels
+    const Assessment = (await import('../models/Assessment.js')).default
+    const assessments = await Assessment.find({ user: userId })
+      .populate('skill', 'name category')
+      .select('skill selfRating averageRating validationStatus')
+      .lean()
+    
+    // Format skills with assessments data
+    const skillsWithRatings = assessments.map(assessment => ({
+      name: assessment.skill?.name || 'Unknown Skill',
+      category: assessment.skill?.category || 'Other',
+      selfRating: assessment.selfRating || 0,
+      averageRating: assessment.averageRating || assessment.selfRating || 0,
+      validated: assessment.validationStatus === 'validated'
+    }))
+    
+    // Get peer review stats
+    const PeerReview = (await import('../models/PeerReview.js')).default
+    const peerReviewStats = await PeerReview.aggregate([
+      { $match: { reviewee: user._id, status: 'completed' } },
+      {
+        $group: {
+          _id: null,
+          totalReviews: { $sum: 1 },
+          averageQuality: { $avg: '$qualityRating' }
+        }
+      }
+    ])
+    
+    const stats = peerReviewStats[0] || { totalReviews: 0, averageQuality: 0 }
+    
+    // Build public profile response
+    const publicProfile = {
+      id: user._id,
+      name: user.name,
+      role: user.role || 'Professional',
+      industry: user.industry,
+      experienceLevel: user.experienceLevel,
+      joinedDate: user.createdAt,
+      skills: skillsWithRatings,
+      stats: {
+        skillsAssessed: skillsWithRatings.length,
+        peerEndorsements: stats.totalReviews,
+        averageRating: Number((stats.averageQuality || 0).toFixed(1)),
+        profileViews: Math.floor(Math.random() * 2000) + 500 // Mock data for now
+      },
+      // Generate some mock achievements based on user data
+      achievements: [
+        ...(skillsWithRatings.length >= 5 ? [{ 
+          title: 'Skill Collector', 
+          description: `Assessed ${skillsWithRatings.length}+ skills` 
+        }] : []),
+        ...(stats.totalReviews >= 3 ? [{ 
+          title: 'Peer Validated', 
+          description: `Received ${stats.totalReviews} peer reviews` 
+        }] : []),
+        ...(stats.averageQuality >= 4 ? [{ 
+          title: 'Quality Contributor', 
+          description: 'High-quality peer review contributor' 
+        }] : [])
+      ]
+    }
+    
+    res.json({ success: true, profile: publicProfile })
+    
+  } catch (error) {
+    console.error('Error fetching public profile:', error)
+    res.status(500).json({ success: false, message: 'Failed to fetch profile' })
+  }
+}
+

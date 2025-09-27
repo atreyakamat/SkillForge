@@ -192,7 +192,7 @@ export default function SelfAssessment() {
         }
         
         // Use the user skills endpoint instead of individual skill creation
-        const endpoint = '/api/users/skills'
+        const endpoint = '/api/skills/me'
         console.log('Calling endpoint:', endpoint)
         console.log('Full URL would be:', window.location.origin + endpoint)
         

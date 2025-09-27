@@ -4,6 +4,9 @@ import { setToken as setAPIToken, clearTokens } from '../services/api.js'
 
 const AuthContext = createContext(null)
 
+// Export AuthContext for legacy imports
+export { AuthContext }
+
 const API_BASE_URL = 'http://localhost:5000/api'
 
 export function AuthProvider({ children }) {
@@ -11,14 +14,39 @@ export function AuthProvider({ children }) {
   const [user, setUser] = useState(null)
 
   useEffect(() => {
-    if (token) {
-      setStoredToken(token)
-      // TODO: fetch current user profile
-      setUser((prev)=> prev || { email: 'you@skillforge.dev' })
-    } else {
-      removeStoredToken()
-      setUser(null)
+    const fetchUserProfile = async () => {
+      if (token) {
+        setStoredToken(token)
+        setAPIToken(token) // Set token for API calls
+        
+        try {
+          // Fetch actual user profile from backend
+          const response = await fetch(`${API_BASE_URL}/auth/profile`, {
+            headers: {
+              'Authorization': `Bearer ${token}`
+            }
+          })
+          
+          if (response.ok) {
+            const data = await response.json()
+            setUser(data.user)
+          } else {
+            console.error('Failed to fetch user profile:', response.status)
+            // If profile fetch fails, clear the invalid token
+            setToken(null)
+          }
+        } catch (error) {
+          console.error('Error fetching user profile:', error)
+          // If there's an error, clear the token
+          setToken(null)
+        }
+      } else {
+        removeStoredToken()
+        setUser(null)
+      }
     }
+    
+    fetchUserProfile()
   }, [token])
 
   const value = useMemo(() => ({

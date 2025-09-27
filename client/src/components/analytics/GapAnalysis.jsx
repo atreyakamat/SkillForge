@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useAuthContext } from '../../contexts/AuthContext'
 import { useSkillContext } from '../../contexts/SkillContext'
-import { analyticsAPI } from '../../services/api'
+import analyticsAPI from '../../services/analyticsAPI'
 import jobsAPI from '../../services/jobsAPI'
 import SkillChart from './SkillChart'
 import JobMatches from './JobMatches'
@@ -48,11 +48,12 @@ const GapAnalysis = () => {
       setLoading(true)
       setError(null)
       
-      // Load development plan (gap analysis)
-      const gapResponse = await analyticsAPI.getDevelopmentPlan(null, {
-        timeframe: filters.timeframe
+      // Load skill gap analysis
+      const gapResponse = await analyticsAPI.getSkillGapAnalysis({
+        industry: user?.industry,
+        targetRole: filters.targetRole
       })
-      setGapData(gapResponse)
+      setGapData(gapResponse.analysis || gapResponse)
       
       // Load job matches
       const matchesResponse = await analyticsAPI.getJobMatches({
@@ -67,11 +68,11 @@ const GapAnalysis = () => {
       const pathResponse = await analyticsAPI.getLearningPaths({
         timeframe: filters.timeframe
       })
-      setLearningPath(pathResponse.paths || [])
+      setLearningPath(pathResponse.paths || gapResponse.analysis?.learningPath || [])
       
       // Load industry data
       const industryResponse = await analyticsAPI.getSkillBenchmarks({
-        industry: user.industry
+        industry: user?.industry
       })
       setIndustryData(industryResponse.benchmarks || {})
       
@@ -88,10 +89,11 @@ const GapAnalysis = () => {
       setSelectedJob(job)
       
       // Load detailed gap analysis for this specific job
-      const jobGapResponse = await analyticsAPI.getGapAnalysis(user.id, {
-        jobId: job.job.id
+      const jobGapResponse = await analyticsAPI.getSkillGapAnalysis({
+        targetRole: job.job.title,
+        industry: job.job.company?.industry
       })
-      setGapData(jobGapResponse.data)
+      setGapData(jobGapResponse.analysis)
       
       // Switch to overview tab to show job-specific analysis
       setActiveTab('overview')
@@ -291,8 +293,9 @@ const GapAnalysis = () => {
                         <span
                           key={index}
                           className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm"
+                          title={`+${strength.advantage} levels above industry average`}
                         >
-                          {strength}
+                          {strength.skill}
                         </span>
                       ))}
                     </div>

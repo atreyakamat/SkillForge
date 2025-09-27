@@ -16,8 +16,23 @@ export default function NavBar() {
               <Link to="/dashboard" className="text-gray-700 hover:text-primary-600 font-medium transition-colors">
                 Dashboard
               </Link>
+              <Link to="/skills" className="text-gray-700 hover:text-primary-600 font-medium transition-colors">
+                My Skills
+              </Link>
+              <Link to="/schedule" className="text-gray-700 hover:text-primary-600 font-medium transition-colors">
+                Schedule
+              </Link>
+              <Link to="/progress" className="text-gray-700 hover:text-primary-600 font-medium transition-colors">
+                Progress
+              </Link>
+              <Link to="/recommendations" className="text-gray-700 hover:text-primary-600 font-medium transition-colors">
+                Recommendations
+              </Link>
               <Link to="/assessment" className="text-gray-700 hover:text-primary-600 font-medium transition-colors">
                 Assessment
+              </Link>
+              <Link to="/peer/dashboard" className="text-gray-700 hover:text-primary-600 font-medium transition-colors">
+                Peer Reviews
               </Link>
               <div className="flex items-center gap-3">
                 <span className="text-sm text-gray-600 px-2 py-1 bg-gray-100 rounded-md">

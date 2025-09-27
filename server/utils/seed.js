@@ -16,20 +16,104 @@ async function run() {
   await Skill.insertMany(skills)
   const jobs = [
     {
-      title: 'Frontend Engineer', company: 'Acme Corp', location: 'Remote', type: 'remote', industry: 'Technology', department: 'Engineering', careerLevel: 'mid',
-      requiredSkills: [
-        { name: 'JavaScript', level: 8, importance: 'critical' },
-        { name: 'React', level: 7, importance: 'critical' },
-        { name: 'CSS', level: 6, importance: 'preferred' }
-      ], salaryMin: 90000, salaryMax: 130000, experience: '3+ years', source: 'manual'
+      title: 'Frontend Engineer',
+      company: {
+        name: 'Acme Corp',
+        industry: 'Technology',
+        size: 'medium'
+      },
+      description: 'Build modern web applications using React and JavaScript',
+      location: {
+        city: 'San Francisco',
+        state: 'CA',
+        remote: true
+      },
+      experienceLevel: 'mid',
+      employmentType: 'full-time',
+      skills: {
+        required: [
+          { name: 'JavaScript', level: 4 },
+          { name: 'React', level: 4 }
+        ],
+        preferred: [
+          { name: 'CSS', level: 3 },
+          { name: 'TypeScript', level: 3 }
+        ]
+      },
+      salary: {
+        min: 90000,
+        max: 130000,
+        currency: 'USD'
+      },
+      postedDate: new Date(),
+      source: 'manual'
     },
     {
-      title: 'Full Stack Developer', company: 'Globex', location: 'Hybrid - NYC', type: 'hybrid', industry: 'Technology', department: 'Engineering', careerLevel: 'mid',
-      requiredSkills: [
-        { name: 'JavaScript', level: 7, importance: 'critical' },
-        { name: 'Node.js', level: 7, importance: 'critical' },
-        { name: 'React', level: 6, importance: 'preferred' }
-      ], salaryMin: 100000, salaryMax: 140000, experience: '4+ years', source: 'manual'
+      title: 'Full Stack Developer',
+      company: {
+        name: 'Globex Inc',
+        industry: 'Technology', 
+        size: 'large'
+      },
+      description: 'Work on both frontend and backend systems',
+      location: {
+        city: 'New York',
+        state: 'NY',
+        hybrid: true
+      },
+      experienceLevel: 'mid',
+      employmentType: 'full-time',
+      skills: {
+        required: [
+          { name: 'JavaScript', level: 4 },
+          { name: 'Node.js', level: 4 }
+        ],
+        preferred: [
+          { name: 'React', level: 3 },
+          { name: 'MongoDB', level: 3 }
+        ]
+      },
+      salary: {
+        min: 100000,
+        max: 140000,
+        currency: 'USD'
+      },
+      postedDate: new Date(),
+      source: 'manual'
+    },
+    {
+      title: 'Senior React Developer',
+      company: {
+        name: 'TechStart LLC',
+        industry: 'Technology',
+        size: 'startup'
+      },
+      description: 'Lead frontend development for our flagship product',
+      location: {
+        city: 'Austin',
+        state: 'TX',
+        remote: false
+      },
+      experienceLevel: 'senior',
+      employmentType: 'full-time',
+      skills: {
+        required: [
+          { name: 'React', level: 5 },
+          { name: 'JavaScript', level: 5 },
+          { name: 'TypeScript', level: 4 }
+        ],
+        preferred: [
+          { name: 'GraphQL', level: 3 },
+          { name: 'AWS', level: 3 }
+        ]
+      },
+      salary: {
+        min: 120000,
+        max: 160000,
+        currency: 'USD'
+      },
+      postedDate: new Date(),
+      source: 'manual'
     }
   ]
   await Job.deleteMany({})

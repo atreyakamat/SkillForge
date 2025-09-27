@@ -394,6 +394,30 @@ class SkillsAPI {
   }
 
   /**
+   * Create a new skill
+   * @param {Object} skillData - Skill data
+   * @param {string} skillData.name - Skill name
+   * @param {string} skillData.category - Skill category
+   * @param {string} skillData.description - Skill description (optional)
+   * @returns {Promise<{success: boolean, skill: Skill}>}
+   */
+  async createSkill(skillData) {
+    try {
+      const response = await instance.post('/skills', skillData)
+      const { data } = response
+      
+      return {
+        success: true,
+        skill: data.skill || data,
+        message: 'Skill created successfully'
+      }
+    } catch (error) {
+      console.error('Create skill error:', error)
+      throw this.handleError(error)
+    }
+  }
+
+  /**
    * Handle API errors and format them consistently
    * @private
    * @param {Error} error - Axios error

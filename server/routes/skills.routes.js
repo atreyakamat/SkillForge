@@ -10,13 +10,15 @@ import {
   deleteUserSkill,
   suggestSkills,
   getSkillDetails,
-  createSkill
+  createSkill,
+  getTrendingSkills
 } from '../controllers/skill.controller.js'
 
 const router = Router()
 
 router.get('/', getAllSkills)
 router.get('/categories', getCategories)
+router.get('/trending', getTrendingSkills) // Get trending skills
 router.get('/details/:id', getSkillDetails)
 router.post('/', createSkill) // Create new skill
 router.get('/me', requireAuth, (req, res) => getUserSkills(req, res)) // Get current user's skills
