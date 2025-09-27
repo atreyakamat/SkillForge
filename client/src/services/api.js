@@ -16,7 +16,12 @@ const instance = axios.create({
 
 // Dev logging
 instance.interceptors.request.use((config) => {
-  if (bearerToken) config.headers.Authorization = `Bearer ${bearerToken}`
+  // Always get the latest token from localStorage
+  const currentToken = localStorage.getItem('accessToken')
+  if (currentToken) {
+    config.headers.Authorization = `Bearer ${currentToken}`
+    bearerToken = currentToken // Update the module variable too
+  }
   if (import.meta.env.DEV) {
     // eslint-disable-next-line no-console
     console.debug('[API] →', config.method?.toUpperCase(), config.url, config.params || config.data)
@@ -91,6 +96,7 @@ export function setToken(token) {
   } else {
     localStorage.removeItem('accessToken')
   }
+  console.log('🔑 Token updated:', token ? 'present' : 'removed')
 }
 
 export function getToken() {

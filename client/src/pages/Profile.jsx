@@ -1,4 +1,7 @@
 import React, { useState } from 'react'
+import { useAuthContext } from '../contexts/AuthContext'
+import { useSkillContext } from '../contexts/SkillContext'
+import { Link } from 'react-router-dom'
 
 const tabs = [
   { id: 'personal', label: 'Personal Information' },
@@ -10,6 +13,20 @@ const tabs = [
 
 export default function Profile() {
   const [activeTab, setActiveTab] = useState('personal')
+  const { user } = useAuthContext()
+  const { userSkills } = useSkillContext()
+
+  // Get user data with fallbacks
+  const userName = user?.name || user?.email?.split('@')[0] || 'User'
+  const userEmail = user?.email || 'user@example.com'
+  const userRole = user?.role || 'Member'
+
+  // Get user skills with fallbacks
+  const skills = userSkills && userSkills.length > 0 ? userSkills : [
+    { skillName: 'JavaScript', selfRating: 4 },
+    { skillName: 'React', selfRating: 3 },
+    { skillName: 'Node.js', selfRating: 2 }
+  ]
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-6 md:px-6 lg:px-8">
@@ -25,8 +42,8 @@ export default function Profile() {
           </div>
           <div className="flex-1 min-w-0">
             <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
-              <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Alex Johnson</h1>
-              <span className="text-gray-600 dark:text-gray-300">Senior Frontend Engineer</span>
+              <h1 className="text-2xl font-bold text-gray-900 dark:text-white">{userName}</h1>
+              <span className="text-gray-600 dark:text-gray-300">{userRole}</span>
             </div>
             <div className="mt-2 flex flex-wrap gap-3 text-sm text-gray-600 dark:text-gray-300">
               <span className="inline-flex items-center gap-1"><span className="material-symbols-outlined text-base">location_on</span> San Francisco, CA</span>
@@ -66,15 +83,15 @@ export default function Profile() {
             <section className="space-y-8">
               <Card title="Basic Details">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <Input label="Full name" placeholder="Alex Johnson" />
-                  <Input label="Email" type="email" placeholder="alex@example.com" />
+                  <Input label="Full name" placeholder={userName} defaultValue={userName} />
+                  <Input label="Email" type="email" placeholder={userEmail} defaultValue={userEmail} />
                   <Input label="Phone" placeholder="(555) 123-4567" />
                 </div>
               </Card>
               <Card title="Professional Information">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <Input label="Role" placeholder="Senior Frontend Engineer" />
-                  <Input label="Company" placeholder="Acme Corp" />
+                  <Input label="Role" placeholder={userRole} defaultValue={userRole} />
+                  <Input label="Company" placeholder="Your Company" />
                   <Input label="Industry" placeholder="Technology" />
                   <Input label="LinkedIn" placeholder="https://linkedin.com/in/username" />
                 </div>
@@ -91,20 +108,25 @@ export default function Profile() {
           {activeTab === 'skills' && (
             <section className="space-y-8">
               <Card title="Skills Overview">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {[
-                    { name: 'JavaScript', rating: 5 },
-                    { name: 'React', rating: 5 },
-                    { name: 'TypeScript', rating: 4 },
-                    { name: 'Node.js', rating: 4 },
-                    { name: 'UI/UX', rating: 3 },
-                  ].map(s => (
-                    <div key={s.name} className="p-3 border border-gray-200 dark:border-gray-800 rounded-lg flex items-center justify-between">
-                      <span className="text-gray-900 dark:text-white">{s.name}</span>
-                      <Stars value={s.rating} />
-                    </div>
-                  ))}
-                </div>
+                {skills.length > 0 ? (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {skills.map(skill => (
+                      <div key={skill.skillName || skill.name} className="p-3 border border-gray-200 dark:border-gray-800 rounded-lg flex items-center justify-between">
+                        <span className="text-gray-900 dark:text-white">{skill.skillName || skill.name}</span>
+                        <Stars value={skill.selfRating || skill.rating || 0} />
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-center py-8 text-gray-500 dark:text-gray-400">
+                    <p>No skills assessed yet.</p>
+                    <p className="text-sm mt-2">
+                      <Link to="/assessment" className="text-primary-600 hover:underline">
+                        Start assessing your skills
+                      </Link>
+                    </p>
+                  </div>
+                )}
               </Card>
               <Card title="Assessment History">
                 <ul className="space-y-3 text-sm text-gray-700 dark:text-gray-300">
@@ -161,7 +183,7 @@ export default function Profile() {
                 </div>
               </Card>
               <Card title="Review History & Ratings">
-                <div className="text-sm text-gray-700 dark:text-gray-300">View your <a className="text-primary-600 hover:underline" href="/peer/history">peer review history</a>.</div>
+                <div className="text-sm text-gray-700 dark:text-gray-300">View your <Link className="text-primary-600 hover:underline" to="/peer/history">peer review history</Link>.</div>
               </Card>
               <Card title="Network Recommendations">
                 <ul className="list-disc pl-5 space-y-2 text-sm text-gray-700 dark:text-gray-300">
@@ -229,8 +251,10 @@ export default function Profile() {
           <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-4">
             <h3 className="font-semibold text-gray-900 dark:text-white mb-3">Account Settings</h3>
             <div className="space-y-2 text-sm">
+              <Link to="/reset-password" className="w-full text-left px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300 block">
+                Change password
+              </Link>
               {[
-                'Change password',
                 'Email preferences',
                 'Data export / download',
                 'Account deletion',

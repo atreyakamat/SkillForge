@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import GapAnalysis from '../components/analytics/GapAnalysis.jsx'
 import JobMatches from '../components/analytics/JobMatches.jsx'
 import Recommendations from '../components/analytics/Recommendations.jsx'
@@ -10,14 +11,14 @@ export default function GapAndJobs() {
       <header className="sticky top-14 z-10 bg-gray-50/80 dark:bg-gray-900/80 backdrop-blur border-b border-gray-200 dark:border-gray-700 -mx-4 px-4 sm:px-6 lg:px-8 py-4">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-8">
-            <a href="#" className="flex items-center gap-2 text-xl font-bold">
+            <Link to="/dashboard" className="flex items-center gap-2 text-xl font-bold">
               <span className="material-symbols-outlined text-primary-600 text-3xl">analytics</span>
               SkillMapper
-            </a>
+            </Link>
             <nav className="hidden md:flex items-center gap-6 text-sm">
-              <a className="text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400" href="/dashboard">Dashboard</a>
-              <a className="text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400" href="/assessment">Assessment</a>
-              <a className="text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400" href="/skills">My Skills</a>
+              <Link className="text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400" to="/dashboard">Dashboard</Link>
+              <Link className="text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400" to="/assessment">Assessment</Link>
+              <Link className="text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400" to="/skills">My Skills</Link>
             </nav>
           </div>
           <div className="flex items-center gap-4">

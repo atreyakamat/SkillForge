@@ -48,37 +48,32 @@ const GapAnalysis = () => {
       setLoading(true)
       setError(null)
       
-      // Load gap analysis
-      const gapResponse = await analyticsAPI.getGapAnalysis(user.id, {
-        targetRole: filters.targetRole
+      // Load development plan (gap analysis)
+      const gapResponse = await analyticsAPI.getDevelopmentPlan(null, {
+        timeframe: filters.timeframe
       })
-      setGapData(gapResponse.data)
+      setGapData(gapResponse)
       
       // Load job matches
-      const matchesResponse = await jobsAPI.getJobMatches(user.id, {
+      const matchesResponse = await analyticsAPI.getJobMatches({
         limit: 20,
         experienceLevel: filters.experienceLevel,
         location: filters.location,
         remote: filters.remote
       })
-      setJobMatches(matchesResponse.data.matches)
+      setJobMatches(matchesResponse.matches || [])
       
       // Load learning path
-      const pathResponse = await analyticsAPI.getLearningPath(user.id, {
+      const pathResponse = await analyticsAPI.getLearningPaths({
         timeframe: filters.timeframe
       })
-      setLearningPath(pathResponse.data)
+      setLearningPath(pathResponse.paths || [])
       
-      // Load industry comparison (mock data for now)
-      setIndustryData({
-        averageSkillLevel: 3.2,
-        topSkills: ['JavaScript', 'React', 'Node.js', 'Python', 'AWS'],
-        salaryBenchmarks: {
-          current: 85000,
-          potential: 110000,
-          industry_average: 95000
-        }
+      // Load industry data
+      const industryResponse = await analyticsAPI.getSkillBenchmarks({
+        industry: user.industry
       })
+      setIndustryData(industryResponse.benchmarks || {})
       
     } catch (err) {
       console.error('Failed to load gap analysis data:', err)

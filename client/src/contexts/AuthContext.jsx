@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useEffect, useMemo, useState } from 'react'
 import { getStoredToken, removeStoredToken, setStoredToken } from '../utils/storage.js'
+import { setToken as setAPIToken, clearTokens } from '../services/api.js'
 
 const AuthContext = createContext(null)
 
@@ -50,6 +51,7 @@ export function AuthProvider({ children }) {
         console.log('🔑 Setting access token:', data.tokens?.access ? 'present' : 'missing')
         
         setToken(data.tokens.access)
+        setAPIToken(data.tokens.access) // Also set the API token
         setUser(data.user)
       } catch (error) {
         console.error('❌ AuthContext login error:', error)
@@ -86,6 +88,7 @@ export function AuthProvider({ children }) {
         console.log('🔑 Setting access token:', data.tokens?.access ? 'present' : 'missing')
         
         setToken(data.tokens.access)
+        setAPIToken(data.tokens.access) // Also set the API token
         setUser(data.user)
       } catch (error) {
         console.error('❌ AuthContext register error:', error)
@@ -111,6 +114,7 @@ export function AuthProvider({ children }) {
         console.log('Logout API call failed, but continuing with local logout')
       }
       setToken(null)
+      clearTokens() // Also clear the API token
       setUser(null)
     }
   }), [token, user])

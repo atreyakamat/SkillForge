@@ -6,6 +6,7 @@ import './index.css'
 import ErrorBoundary from './components/common/ErrorBoundary.jsx'
 import { AuthProvider } from './contexts/AuthContext.jsx'
 import { SkillProvider } from './contexts/SkillContext.jsx'
+import { AssessmentProvider } from './contexts/AssessmentContext.jsx'
 import { PeerReviewProvider } from './contexts/PeerReviewContext.jsx'
 
 createRoot(document.getElementById('root')).render(
@@ -13,11 +14,13 @@ createRoot(document.getElementById('root')).render(
     <ErrorBoundary>
       <AuthProvider>
         <SkillProvider>
-          <PeerReviewProvider>
-            <BrowserRouter>
-              <App />
-            </BrowserRouter>
-          </PeerReviewProvider>
+          <AssessmentProvider>
+            <PeerReviewProvider>
+              <BrowserRouter>
+                <App />
+              </BrowserRouter>
+            </PeerReviewProvider>
+          </AssessmentProvider>
         </SkillProvider>
       </AuthProvider>
     </ErrorBoundary>

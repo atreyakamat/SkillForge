@@ -5,48 +5,109 @@ import { rankJobs } from '../services/jobMatching.js'
 import { generateLearningPath } from '../services/recommendations.js'
 
 export async function getSkillDevelopmentPlan(req, res) {
-  const user = await User.findById(req.params.userId)
-  if (!user) return res.status(404).json({ success: false, message: 'User not found' })
-  const userLevels = Object.fromEntries((user.skills || []).map(s => [s.name, s.selfRating || 0]))
-  const jobs = await Job.find({ industry: user.industry }).limit(20)
-  const required = Array.from(new Set(jobs.flatMap(j => (j.skills?.required || []).map(r => r.name)))).map(name => ({
-    name,
-    level: Math.round(jobs.reduce((sum,j)=> sum + ((j.skills?.required || []).find(r => r.name === name)?.level || 0), 0) / Math.max(1, jobs.length)),
-    importance: 'preferred'
-  }))
-  const { gaps } = analyzeSkills(userLevels, required)
-  const prioritized = prioritizeGapsByImpact(gaps)
-  res.json({ success: true, developmentPlan: prioritized, skillAnalysis: gaps })
+  try {
+    // Use current user from JWT if no userId provided, otherwise use the provided userId
+    const userId = req.params.userId || req.user.id
+    const user = await User.findById(userId)
+    
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found' })
+    }
+    
+    const userLevels = Object.fromEntries((user.skills || []).map(s => [s.name, s.selfRating || 0]))
+    const jobs = await Job.find({ industry: user.industry }).limit(20)
+    const required = Array.from(new Set(jobs.flatMap(j => (j.skills?.required || []).map(r => r.name)))).map(name => ({
+      name,
+      level: Math.round(jobs.reduce((sum,j)=> sum + ((j.skills?.required || []).find(r => r.name === name)?.level || 0), 0) / Math.max(1, jobs.length)),
+      importance: 'preferred'
+    }))
+    const { gaps } = analyzeSkills(userLevels, required)
+    const prioritized = prioritizeGapsByImpact(gaps)
+    
+    res.json({ 
+      success: true, 
+      developmentPlan: prioritized, 
+      skillAnalysis: gaps,
+      user: {
+        id: user._id,
+        name: user.name,
+        industry: user.industry
+      }
+    })
+  } catch (error) {
+    console.error('Error in getSkillDevelopmentPlan:', error)
+    res.status(500).json({ success: false, message: 'Internal server error' })
+  }
 }
 
 export async function getJobMatches(req, res) {
-  const user = await User.findById(req.params.userId)
-  if (!user) return res.status(404).json({ success: false, message: 'User not found' })
-  const userLevels = Object.fromEntries((user.skills || []).map(s => [s.name, s.selfRating || 0]))
-  const jobs = await Job.find({ industry: user.industry }).limit(50)
-  const ranked = rankJobs(userLevels, jobs)
-  res.json({ success: true, matches: ranked.map(r => ({
-    jobId: r.job._id,
-    title: r.job.title,
-    company: r.job.company,
-    fitScore: r.fitScore,
-    missingCritical: r.missingCritical
-  })) })
+  try {
+    // Use current user from JWT if no userId provided, otherwise use the provided userId
+    const userId = req.params.userId || req.user.id
+    const user = await User.findById(userId)
+    
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found' })
+    }
+    
+    const userLevels = Object.fromEntries((user.skills || []).map(s => [s.name, s.selfRating || 0]))
+    const jobs = await Job.find({ industry: user.industry }).limit(50)
+    const ranked = rankJobs(userLevels, jobs)
+    
+    res.json({ 
+      success: true, 
+      matches: ranked.map(r => ({
+        jobId: r.job._id,
+        title: r.job.title,
+        company: r.job.company,
+        fitScore: r.fitScore,
+        missingCritical: r.missingCritical
+      })),
+      user: {
+        id: user._id,
+        name: user.name,
+        industry: user.industry
+      }
+    })
+  } catch (error) {
+    console.error('Error in getJobMatches:', error)
+    res.status(500).json({ success: false, message: 'Internal server error' })
+  }
 }
 
 export async function generateLearningPathController(req, res) {
-  const user = await User.findById(req.params.userId)
-  if (!user) return res.status(404).json({ success: false, message: 'User not found' })
-  const userLevels = Object.fromEntries((user.skills || []).map(s => [s.name, s.selfRating || 0]))
-  const jobs = await Job.find({ industry: user.industry }).limit(20)
-  const required = Array.from(new Set(jobs.flatMap(j => (j.skills?.required || []).map(r => r.name)))).map(name => ({
-    name,
-    level: Math.round(jobs.reduce((sum,j)=> sum + ((j.skills?.required || []).find(r => r.name === name)?.level || 0), 0) / Math.max(1, jobs.length)),
-    importance: 'preferred'
-  }))
-  const { gaps } = analyzeSkills(userLevels, required)
-  const learning = generateLearningPath(gaps)
-  res.json({ success: true, learningPath: learning })
+  try {
+    // Use current user from JWT if no userId provided, otherwise use the provided userId
+    const userId = req.params.userId || req.user.id
+    const user = await User.findById(userId)
+    
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found' })
+    }
+    
+    const userLevels = Object.fromEntries((user.skills || []).map(s => [s.name, s.selfRating || 0]))
+    const jobs = await Job.find({ industry: user.industry }).limit(20)
+    const required = Array.from(new Set(jobs.flatMap(j => (j.skills?.required || []).map(r => r.name)))).map(name => ({
+      name,
+      level: Math.round(jobs.reduce((sum,j)=> sum + ((j.skills?.required || []).find(r => r.name === name)?.level || 0), 0) / Math.max(1, jobs.length)),
+      importance: 'preferred'
+    }))
+    const { gaps } = analyzeSkills(userLevels, required)
+    const learning = generateLearningPath(gaps)
+    
+    res.json({ 
+      success: true, 
+      learningPath: learning,
+      user: {
+        id: user._id,
+        name: user.name,
+        industry: user.industry
+      }
+    })
+  } catch (error) {
+    console.error('Error in generateLearningPathController:', error)
+    res.status(500).json({ success: false, message: 'Internal server error' })
+  }
 }
 
 export async function getIndustryBenchmarks(req, res) {

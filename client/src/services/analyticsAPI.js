@@ -65,7 +65,9 @@ class AnalyticsAPI {
       
       return {
         success: true,
-        plan: data.plan || data,
+        plan: data.developmentPlan || data.plan || data,
+        skillAnalysis: data.skillAnalysis,
+        user: data.user,
         message: 'Development plan retrieved successfully'
       }
     } catch (error) {
@@ -117,13 +119,14 @@ class AnalyticsAPI {
       if (filters.limit) params.append('limit', filters.limit.toString())
       if (filters.sortBy) params.append('sortBy', filters.sortBy)
       
-      const response = await instance.get(`/analytics/job-matches?${params.toString()}`)
+      const response = await instance.get(`/analytics/jobs/matches/me?${params.toString()}`)
       const { data } = response
       
       return {
         success: true,
         matches: data.matches || data,
         totalCount: data.totalCount || 0,
+        user: data.user,
         message: 'Job matches retrieved successfully'
       }
     } catch (error) {
@@ -149,12 +152,13 @@ class AnalyticsAPI {
       if (options.experience) params.append('experience', options.experience)
       if (options.timeAvailable) params.append('timeAvailable', options.timeAvailable.toString())
       
-      const response = await instance.get(`/analytics/learning-paths?${params.toString()}`)
+      const response = await instance.get(`/analytics/learning-path/me?${params.toString()}`)
       const { data } = response
       
       return {
         success: true,
-        paths: data.paths || data,
+        paths: data.learningPath || data.paths || data,
+        user: data.user,
         message: 'Learning paths retrieved successfully'
       }
     } catch (error) {

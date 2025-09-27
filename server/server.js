@@ -67,7 +67,7 @@ app.get('/health', (req, res) => {
 // Test JWT token generation endpoint
 app.get('/health/test-token', (req, res) => {
   const testPayload = {
-    id: 'test-user-123',
+    id: '507f1f77bcf86cd799439011', // Valid ObjectId format
     role: 'user'
   }
   // Use jwt directly for test endpoint

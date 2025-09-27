@@ -13,7 +13,7 @@ export async function getCategories(req, res) {
 }
 
 export async function getUserSkills(req, res) {
-  const { userId } = req.params
+  const userId = req.params.userId || req.user.id // Use current user if no userId provided
   const assessments = await Assessment.find({ user: userId }).populate('skill').lean()
   const profile = assessments.map(a => ({
     skillId: a.skill?._id,
@@ -129,6 +129,41 @@ export async function getSkillDetails(req, res) {
   const skill = await Skill.findById(id).populate('relatedSkills prerequisites').lean()
   if (!skill) return res.status(404).json({ success: false, message: 'Skill not found' })
   res.json({ success: true, skill })
+}
+
+export async function createSkill(req, res) {
+  try {
+    const { name, category, description, marketDemandScore } = req.body
+    
+    if (!name) {
+      return res.status(400).json({ 
+        success: false, 
+        message: 'Skill name is required' 
+      })
+    }
+    
+    // Check if skill already exists
+    const existingSkill = await Skill.findOne({ name: { $regex: new RegExp(`^${name}$`, 'i') } })
+    if (existingSkill) {
+      return res.status(409).json({ 
+        success: false, 
+        message: 'Skill already exists',
+        skill: existingSkill
+      })
+    }
+    
+    const skill = await Skill.create({
+      name,
+      category: category || 'Other',
+      description: description || `User-added skill: ${name}`,
+      marketDemandScore: marketDemandScore || 50
+    })
+    
+    res.status(201).json({ success: true, skill })
+  } catch (error) {
+    console.error('Error creating skill:', error)
+    res.status(500).json({ success: false, message: error.message })
+  }
 }
 
 

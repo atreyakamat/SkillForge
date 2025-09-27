@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import RegisterForm from '../components/auth/RegisterForm.tsx'
 import NavBar from '../components/common/NavBar.jsx'
 
@@ -16,7 +17,7 @@ export default function Register() {
               <RegisterForm />
             </div>
             <div className="text-center">
-              <p className="text-sm text-gray-600 dark:text-gray-400">Already have an account? <a className="font-medium text-primary-600 hover:underline" href="/login">Sign in</a></p>
+              <p className="text-sm text-gray-600 dark:text-gray-400">Already have an account? <Link className="font-medium text-primary-600 hover:underline" to="/login">Sign in</Link></p>
             </div>
           </div>
         </div>

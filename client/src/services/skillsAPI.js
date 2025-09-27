@@ -137,17 +137,65 @@ class SkillsAPI {
   /**
    * Add skill to user profile
    * @param {Object} skillData - Skill data
-   * @param {string} skillData.skillId - Skill ID
+   * @param {string} skillData.skillName - Skill name (for new skills)
+   * @param {string} skillData.skillId - Skill ID (for existing skills)
    * @param {number} skillData.selfRating - Self rating (1-10)
    * @param {string} skillData.evidence - Evidence/experience
-   * @param {string} skillData.confidenceLevel - Confidence level
+   * @param {number} skillData.confidence - Confidence level (1-10)
    * @returns {Promise<{success: boolean, skill: UserSkill}>}
    */
   async addUserSkill(skillData) {
     try {
-      const response = await instance.post('/skills/me', skillData)
+      console.log('addUserSkill called with:', skillData)
+      
+      // For new skills, we need to create the skill first or find an existing one
+      let skillId = skillData.skillId
+      
+      if (skillData.skillName && !skillId) {
+        // Try to create a new skill entry first
+        const newSkillData = {
+          name: skillData.skillName,
+          category: skillData.category || 'Other',
+          description: `User-added skill: ${skillData.skillName}`,
+          marketDemandScore: 50 // Default market demand
+        }
+        
+        try {
+          console.log('Creating new skill:', newSkillData)
+          const createSkillResponse = await instance.post('/skills', newSkillData)
+          skillId = createSkillResponse.data.skill?._id || createSkillResponse.data._id
+          console.log('Created skill with ID:', skillId)
+        } catch (createError) {
+          console.error('Could not create new skill:', createError)
+          console.error('Create error details:', createError.response?.data || createError.message)
+          
+          // If skill already exists (409), use the existing skill
+          if (createError.response?.status === 409) {
+            console.log('Skill already exists, using existing skill')
+            skillId = createError.response.data.skill._id
+          } else {
+            // For other errors, throw the error
+            throw new Error(`Failed to create skill "${skillData.skillName}": ${createError.response?.data?.message || createError.message}`)
+          }
+        }
+      }
+      
+      if (!skillId) {
+        throw new Error('Could not find or create skill')
+      }
+      
+      const requestData = {
+        skillId,
+        selfRating: skillData.selfRating,
+        confidence: skillData.confidence,
+        evidence: skillData.evidence
+      }
+      
+      console.log('Sending skill data to backend:', requestData)
+      const response = await instance.post('/skills/me', requestData)
       const { data } = response
       
+      console.log('Backend response:', data)
       return {
         success: true,
         skill: data.skill || data,

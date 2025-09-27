@@ -1,3 +1,4 @@
+import React from 'react'
 import SelfAssessment from '../components/assessment/SelfAssessment.jsx'
 import AssessmentHistory from '../components/assessment/AssessmentHistory.jsx'
 
@@ -38,17 +39,7 @@ export default function Assessment() {
           </div>
         </section>
 
-        {/* Tabs placeholder */}
-        <section className="border-b border-primary-600/20 dark:border-primary-600/30">
-          <nav className="-mb-px flex gap-6 text-sm">
-            <a className="border-b-2 border-primary-600 text-primary-700 py-3">Technical Skills</a>
-            <a className="border-b-2 border-transparent text-black/60 dark:text-white/60 hover:text-black/80 dark:hover:text-white/80 hover:border-primary-600/50 py-3">Soft Skills</a>
-            <a className="border-b-2 border-transparent text-black/60 dark:text-white/60 hover:text-black/80 dark:hover:text-white/80 hover:border-primary-600/50 py-3">Domain Knowledge</a>
-            <a className="border-b-2 border-transparent text-black/60 dark:text-white/60 hover:text-black/80 dark:hover:text-white/80 hover:border-primary-600/50 py-3">Leadership</a>
-          </nav>
-        </section>
-
-        {/* Self assessment (multi-step) */}
+        {/* Self assessment */}
         <section className="space-y-6">
           <SelfAssessment />
         </section>

@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import LoginForm from '../components/auth/LoginForm.tsx'
 import NavBar from '../components/common/NavBar.jsx'
 
@@ -16,7 +17,7 @@ export default function Login() {
               <LoginForm />
             </div>
             <p className="mt-8 text-center text-sm text-gray-600 dark:text-gray-400">
-              <a className="font-medium text-primary-600 hover:underline" href="/forgot-password">Forgot password?</a>
+              <Link className="font-medium text-primary-600 hover:underline" to="/forgot-password">Forgot password?</Link>
             </p>
           </div>
         </div>

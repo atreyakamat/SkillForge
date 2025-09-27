@@ -1,4 +1,4 @@
-# SkillForge Testing Strategy & Quality Assurance
+ SkillForge Testing Strategy & Quality Assurance
 
 This document outlines the comprehensive testing strategy implemented for the SkillForge application, covering all aspects of quality assurance from unit tests to end-to-end testing.
 

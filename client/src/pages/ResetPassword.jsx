@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import { Link } from 'react-router-dom'
 
 export default function ResetPassword() {
   const [pw, setPw] = useState('')
@@ -55,7 +56,7 @@ export default function ResetPassword() {
             <button type="submit" disabled={mismatch || strength < 3} className="w-full bg-primary-600 disabled:bg-primary-600/60 text-white font-semibold py-3 px-4 rounded-lg hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 dark:focus:ring-offset-gray-900 focus:ring-primary-600 transition-colors">Reset Password</button>
           </form>
           <div className="text-center mt-6">
-            <a href="/login" className="text-sm text-primary-600 hover:underline">Back to Login</a>
+            <Link to="/login" className="text-sm text-primary-600 hover:underline">Back to Login</Link>
           </div>
         </main>
       </div>
