@@ -35,9 +35,9 @@ export default function Layout({ children }) {
         </div>
       </div>
 
-      <div className="w-full px-8 grid md:[grid-template-columns:280px_1fr] gap-6 mt-8">
-        <Sidebar className="hidden md:block" />
-        <div>
+      <div className="w-full px-8 flex gap-6 mt-8">
+        <Sidebar className="hidden md:block flex-shrink-0" />
+        <div className="flex-1 min-w-0">
           <div className="flex justify-end">
             <button className="px-3 py-1 rounded border text-sm" onClick={()=>setTheme(t=>t==='light'?'dark':'light')}>{theme==='light'?'Dark':'Light'} mode</button>
           </div>

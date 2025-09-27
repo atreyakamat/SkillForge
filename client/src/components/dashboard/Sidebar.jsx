@@ -18,16 +18,16 @@ export default function Sidebar({ mobile = false, onNavigate, className = '' }) 
   const containerClass = mobile ? 'block w-full h-full' : 'hidden md:block w-[280px]'
   
   return (
-    <aside className={`bg-white border-r border-gray-200 ${mobile ? 'h-full' : 'h-screen'} sticky top-0 ${containerClass} ${className} flex flex-col overflow-hidden`}>
+    <aside className={`bg-white border-r border-gray-200 ${mobile ? 'h-full' : 'h-screen max-h-screen'} ${mobile ? 'relative' : 'sticky top-0'} ${containerClass} ${className} flex flex-col shadow-sm`}>
       {/* Header - Fixed */}
-      <div className="flex-shrink-0 p-4 border-b border-gray-100">
+      <div className="flex-shrink-0 p-4 border-b border-gray-100 bg-white">
         <h2 className="text-sm font-semibold text-gray-900 uppercase tracking-wider">
           Navigation
         </h2>
       </div>
 
       {/* Scrollable Content Area */}
-      <div className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
+      <div className="flex-1 overflow-y-auto overflow-x-hidden scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100" style={{ maxHeight: 'calc(100vh - 120px)' }}>
         {/* Navigation */}
         <nav className="p-2 space-y-1">
           {nav.map(({ to, label, icon: Icon }) => (
@@ -69,11 +69,11 @@ export default function Sidebar({ mobile = false, onNavigate, className = '' }) 
         </div>
 
         {/* Extra spacing for scroll buffer */}
-        <div className="h-4"></div>
+        <div className="h-8"></div>
       </div>
 
       {/* Footer - Fixed */}
-      <div className="flex-shrink-0 p-4 border-t border-gray-100 bg-gray-50">
+      <div className="flex-shrink-0 p-3 border-t border-gray-100 bg-gray-50">
         <div className="text-xs text-gray-500 text-center">
           SkillForge v2.0
         </div>
