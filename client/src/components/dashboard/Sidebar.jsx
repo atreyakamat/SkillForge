@@ -15,32 +15,64 @@ const nav = [
 ]
 
 export default function Sidebar({ mobile = false, onNavigate, className = '' }) {
-  const containerClass = mobile ? 'block w-full' : 'hidden md:block w-[320px]'
+  const containerClass = mobile ? 'block w-full' : 'hidden md:block w-[280px]'
+  
   return (
-    <aside className={`bg-white border-r h-full p-3 sticky ${mobile ? 'top-0' : 'top-16'} ${containerClass} ${className} overflow-y-auto`}>
+    <aside className={`bg-white border-r border-gray-200 h-screen sticky ${mobile ? 'top-0' : 'top-0'} ${containerClass} ${className} flex flex-col`}>
+      {/* Header */}
+      <div className="p-4 border-b border-gray-100">
+        <h2 className="text-sm font-semibold text-gray-900 uppercase tracking-wider">
+          Navigation
+        </h2>
+      </div>
+
       {/* Navigation */}
-      <nav className="space-y-1 mb-6">
-        {nav.map(({ to, label, icon: Icon }) => (
-          <NavLink
-            key={to}
-            to={to}
-            onClick={onNavigate}
-            className={({ isActive }) => `flex items-center gap-3 px-3 py-2 rounded transition-all duration-200 hover:bg-gray-100 hover:scale-105 ${isActive ? 'bg-blue-50 border-r-2 border-blue-500 font-medium text-blue-700' : 'text-gray-700'} ${
-              ['/schedule', '/progress', '/recommendations'].includes(to) ? 'magical-glow-subtle' : ''
-            }`}
-          >
-            <Icon className="h-4 w-4" />
-            <span>{label}</span>
-          </NavLink>
-        ))}
-      </nav>
+      <div className="flex-1 overflow-y-auto">
+        <nav className="p-2 space-y-1">
+          {nav.map(({ to, label, icon: Icon }) => (
+            <NavLink
+              key={to}
+              to={to}
+              onClick={onNavigate}
+              className={({ isActive }) => 
+                `flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 hover:bg-gray-50 group ${
+                  isActive 
+                    ? 'bg-blue-50 text-blue-700 border-l-4 border-blue-500' 
+                    : 'text-gray-700 hover:text-gray-900'
+                } ${
+                  ['/schedule', '/progress', '/recommendations'].includes(to) 
+                    ? 'magical-glow-subtle' 
+                    : ''
+                }`
+              }
+            >
+              <Icon className="h-5 w-5 flex-shrink-0" />
+              <span className="truncate">{label}</span>
+              {['/schedule', '/progress', '/recommendations'].includes(to) && (
+                <div className="ml-auto">
+                  <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
+                </div>
+              )}
+            </NavLink>
+          ))}
+        </nav>
 
-      {/* Divider */}
-      <div className="border-t border-gray-200 my-4"></div>
+        {/* Activity Section */}
+        <div className="mt-6 border-t border-gray-100">
+          <div className="p-4">
+            <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-4">
+              Recent Activity
+            </h3>
+            <MiniSkillCards />
+          </div>
+        </div>
+      </div>
 
-      {/* Mini Skill Cards */}
-      <div className="px-1">
-        <MiniSkillCards />
+      {/* Footer */}
+      <div className="p-4 border-t border-gray-100 bg-gray-50">
+        <div className="text-xs text-gray-500 text-center">
+          SkillForge v2.0
+        </div>
       </div>
     </aside>
   )
